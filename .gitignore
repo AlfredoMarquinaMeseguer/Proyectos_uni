@@ -1,0 +1,15 @@
+
+*.out
+AEDII/Practica1_DyV/a.txt
+*.o
+AEDII/Practica1_DyV/pruebas.csv
+Compi_miniC/lexico1
+Compi_miniC/lex2
+Compi_miniC/miniC
+Compi_miniC/calc
+AEDII/Practica1_DyV/solucion
+AEDII/Practica1_DyV/algo.csv
+AEDII/Practica1_DyV/divideyvenceras.txt
+AEDII/Practica1_DyV/iterativa.txt
+AEDII/Practica1_DyV/entrada.txt
+AEDII/Practica1_DyV/in.txt
