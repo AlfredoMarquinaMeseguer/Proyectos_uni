@@ -64,7 +64,7 @@ void divideYVenceras(std::string problema)
 
 void iterativa(string problema)
 {
-    for (int i = 0; i < problema.length() - (tamannoSolucion-1); i++)
+    for (int i = 0; i < int(problema.length()) - (tamannoSolucion-1); i++)
     {
         if (cadenas.find(problema.substr(i, mitadSolucion)) != cadenas.end() &&
             cadenas.find(problema.substr(i + mitadSolucion, mitadSolucion)) != cadenas.end())
