@@ -107,12 +107,10 @@ int main(int argc, char *argv[])
 
     if (argc > 1 && std::strcmp(argv[1], "it") == 0)
     {
-        cout << "it" << endl;
         iterativa(problema);
     }
     else if (argc > 1 && std::strcmp(argv[1], "dyv") == 0)
     {
-        cout << "dyv" << endl;
         divideYVenceras(problema);
     }
     return 0;
