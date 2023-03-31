@@ -69,7 +69,7 @@ void iterativa(string problema)
         if (cadenas.find(problema.substr(i, mitadSolucion)) != cadenas.end() &&
             cadenas.find(problema.substr(i + mitadSolucion, mitadSolucion)) != cadenas.end())
         {
-            cout << i + 1 << " " << problema.substr(i, tamannoSolucion) << endl;
+            std::cout << i + 1 << " " << problema.substr(i, tamannoSolucion) << std::endl;
         }
     }
 }
