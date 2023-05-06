@@ -65,7 +65,7 @@ def resolver_problema(matriz: [[int]], num_subs: int, len_matriz: int):
     conjunto_solucion = []
     tamanno_sol = 2
 
-    pares = calcular_pares(len_matriz)
+    pares = calcular_pares(len_matriz, matriz)
     sol, indice = calcular_max(pares)
     pares.pop(indice)
     while tamanno_sol < num_subs:
@@ -122,7 +122,7 @@ def entrada():
         # Press the green button in the gutter to run the script.
 
 
-def calcular_pares(dimensiones: int):
+def calcular_pares(dimensiones: int, matriz):
     combi = combinaciones_2(dimensiones)
     pares = []
 
@@ -154,15 +154,27 @@ if __name__ == '__main__':
               [2, 0, 4, 5],
               [2, 1, 0, 4],
               [2, 3, 2, 0]]
-    pares = calcular_pares(4)
-    solucion = resolver_problema(matriz, 3, 4)
+    dimensiones = 6
+    num_sub = 3
+    matriz2 =[[5,    0,    4,    2,    5,    3],
+    [4,    0,    1,    1,    3,    3],
+    [2,    5,    0,    3,    0,    4],
+    [3,    3,    4,    0,    4,    7],
+    [2,    5,    7,    5,    0,    6],
+    [4,    8,    5,    6,    8,    0]]
+    # pares = calcular_pares(4)
+    # solucion = resolver_problema(matriz, 3, 4)
+    #
+    # for i in  str_respuesta(solucion, 4):
+    #     print(i)
 
-    for i in  str_respuesta(solucion, 4):
-        print(i)
+    for i in  str_respuesta(resolver_problema(matriz2, num_sub, dimensiones), dimensiones):
+            print(i)
 
 
-    print(pares)
-    print(calcular_max(pares))
+
+    # print(pares)
+    # print(calcular_max(pares))
     print(combinaciones_2_con_n([1, 2, 3, 4], 5))
 
     print(1 | 2 in (1, 4, 1))
