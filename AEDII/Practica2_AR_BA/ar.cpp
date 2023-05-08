@@ -121,6 +121,7 @@ std::string resolver_problema(int numSub, int dimensiones, int **matriz)
     }
     salida.pop_back()
     salida += "\n";
+    
     return salida;
 }
 
