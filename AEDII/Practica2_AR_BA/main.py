@@ -1,9 +1,15 @@
 # This is a sample Python script.
+import dataclasses
 from typing import Tuple, Any
 
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Esto en c++ sería una struct
+@dataclasses.dataclass
+class Solucion:
+    indices: list[int]
+    total: int
 
 
 def combinaciones_2(dimensiones) -> list[list[int]]:
@@ -37,59 +43,44 @@ def calcular_distancias_listas(lista, matriz) -> int:
     return [calculas_distancia(i[0], i[1], matriz) for i in lista]
 
 
-def solucion_con_dos():
-    dimensiones = 4
-    subconjuntos = 2
-    matriz = [[0, 3, 2, 4],
-              [2, 0, 4, 5],
-              [2, 1, 0, 4],
-              [2, 3, 2, 0]]
-    sol = []
+def solucion_con_dos(dimensiones, matriz) -> Solucion:
+    pareja_ganadora = []
     maxi = 0
-    # [0,1] [0,2] 0,3 1,2 1,3 2,4
-    #
-    # matriz[candidatos[0]][candidatos[1]] + matriz[candidatos[1]][candidatos[0]]
-    candidatos = combinaciones_2(dimensiones, subconjuntos)
+    for i in range(0, dimensiones):
+        for j in range(i + 1, dimensiones):
+            candidato = calculas_distancia(i, j, matriz)
+            if candidato > maxi:
+                pareja_ganadora = [i, j]
+                maxi = candidato
 
-    for i in candidatos:
-        x = calculas_distancia(i[0], i[1], matriz)
-        if x > maxi:
-            maxi = x
-            sol = i
-
-    return maxi, sol
+    return Solucion(pareja_ganadora, maxi)
 
 
 # len_matriz no es necesaria
-def resolver_problema(matriz: [[int]], num_subs: int, len_matriz: int):
-    conjunto_solucion = []
-    tamanno_sol = 2
+def resolver_problema(matriz: [[int]], len_matriz: int, num_subs: int):
+    # La solución para dos es diferente al resto de soluciones
+    # Una vez obtenida se va añadiendo a ella.
+    solution = solucion_con_dos(len_matriz, matriz)
 
-    pares = calcular_pares(len_matriz, matriz)
-    sol, indice = calcular_max(pares)
-    pares.pop(indice)
-    while tamanno_sol < num_subs:
-        tamanno_sol += 1
-        pares_copy = pares.copy()
-        a = None
-        while a is None:
-            candidato, indice = calcular_max(pares_copy)  # seleccionar
-            if candidato[0][0] in sol[0]:
-                a = candidato[0][1]
-            elif candidato[0][1] in sol[0]:  # factible
-                a = candidato[0][0]
-            else:
-                pares_copy.pop(indice)
+    if len(solution.indices) < num_subs:
+        # Creamos lista de indices candidatos
+        candidatos = list(range(len_matriz))
+        # quitamos los que ya se encuentran en la solución
+        for i in solution.indices:
+            candidatos.remove(i)
 
-        # añadir a solución
-        # eliminar sol de pares
-        pares_sol = combinaciones_2_con_n(sol[0], a)
-        # sumar = 0
-        for i in pares_sol:
-            sol[1] += calculas_distancia(i[0], i[1], matriz)
-        sol[0].append(a)
-
-    return sol
+        while len(solution.indices) < num_subs:
+            # Seleccionamos el siguiente indice
+            siguiente, total = calc_siguiente(solution.indices, candidatos, matriz)
+            # Como siempre da solución lo añadimos a siguiente
+            solution.indices.append(siguiente)
+            # También sustituimos el total
+            solution.total = total
+            # Quitamos al siguiente de los candidatos por si hacemos otro bucle
+            candidatos.remove(siguiente)
+    # Devuelve una clase tipo solución que contiene una lista de índices escogidos y el total que sumas. Esto en
+    # c++ puede ser un struct con un array índices, tamaño array y total.
+    return solution
 
 
 def calcular_max(lista: list[list[int], int]) -> Tuple[list[list[int] | int], int]:
@@ -149,6 +140,31 @@ def str_respuesta(solucion, dimensiones) -> Tuple[str, str]:
     return str(solucion[1]), salida_str.strip()
 
 
+def distancia_total(lista: list[int], matriz: list[list[int]]) -> int:
+    # De la lista se obtienen y calculan todas las distancias
+    sol = 0
+    for i in range(0, len(lista)):
+        for j in range(i + 1, len(lista)):
+            sol += calculas_distancia(lista[i], lista[j], matriz)
+
+    return sol
+
+
+def calc_siguiente(en_sol: list[int], candidatos: list[int], matriz: list[list[int]]):
+    pass
+    calc = []
+    maxi_indice = -1
+    maxi = 0
+    # Utilizamos el range para simular c++
+    for i in range(len(candidatos)):
+        pretendiente = distancia_total(en_sol + [candidatos[i]], matriz)
+        if maxi < pretendiente:
+            maxi_indice = candidatos[i]
+            maxi = pretendiente
+
+    return maxi_indice, maxi
+
+
 if __name__ == '__main__':
     matriz = [[0, 3, 2, 4],
               [2, 0, 4, 5],
@@ -156,25 +172,21 @@ if __name__ == '__main__':
               [2, 3, 2, 0]]
     dimensiones = 6
     num_sub = 3
-    matriz2 =[[5,    0,    4,    2,    5,    3],
-    [4,    0,    1,    1,    3,    3],
-    [2,    5,    0,    3,    0,    4],
-    [3,    3,    4,    0,    4,    7],
-    [2,    5,    7,    5,    0,    6],
-    [4,    8,    5,    6,    8,    0]]
+    matriz2 = [[5, 0, 4, 2, 5, 3],
+               [4, 0, 1, 1, 3, 3],
+               [2, 5, 0, 3, 0, 4],
+               [3, 3, 4, 0, 4, 7],
+               [2, 5, 7, 5, 0, 6],
+               [4, 8, 5, 6, 8, 0]]
+    print(resolver_problema(matriz, 4, 3))
+    print(resolver_problema(matriz2, dimensiones, num_sub))
     # pares = calcular_pares(4)
     # solucion = resolver_problema(matriz, 3, 4)
     #
     # for i in  str_respuesta(solucion, 4):
     #     print(i)
-
-    for i in  str_respuesta(resolver_problema(matriz2, num_sub, dimensiones), dimensiones):
-            print(i)
-
-
-
-    # print(pares)
-    # print(calcular_max(pares))
-    print(combinaciones_2_con_n([1, 2, 3, 4], 5))
-
-    print(1 | 2 in (1, 4, 1))
+    b = list(range(4))
+    a = [0, 4, 2, 3, 4]
+    # a.pop(4)
+    print(a)
+    print(b)
