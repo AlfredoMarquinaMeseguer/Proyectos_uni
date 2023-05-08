@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <list>
 
 using namespace std;
 
 struct Solucion
 {
     int *indices;
-    int tamano;
     int totalDistancia;
 };
 
@@ -46,32 +46,82 @@ struct Solucion solucionDos(int dimensiones, int **matriz)
 
     return solucion;
 }
-string resolver_problema(int numSub, int dimensiones, int **matriz)
+
+int distanciaEntreListaYNumero(std::list<int> indices, int indice_cand, int **matriz)
+{
+    int total = 0;
+    for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
+    {
+        total += matriz[i][j] + matriz[j][i];
+    }
+    return total;
+}
+
+struct Candidato calcularSiguiente(std::list<int> indices, std::list<int> candidatos, int **matriz)
+{
+    struct Candidato elegido;
+    int pretendiente;
+    std::list<int>::iterator it_indices;
+
+    std::list<int>::iterator it_candidatos = candidatos.begin();
+    elegido.indice = *(it_candidato);
+    elegido.totalDistancia = distanciaEntreListaYNumero(indices, *(it_candidatos), matriz);
+    while (it_candidatos != candidatos.end())
+    {
+        // for(std::list<int>::iterator it_candidatos = candidatos.begin(); it_candidatos != candidatos.end(); it_candidatos++){
+        it_indices = indices.begin();
+        pretendiente = distanciaEntreListaYNumero(indices, *(it_candidatos), matriz) if (pretendiente > elegido.totalDistancia)
+        {
+            elegido.indice = *(it_candidato);
+            elegido.totalDistancia = pretendiente;
+        }
+        it_candidatos++;
+    }
+
+    return elegido;
+}
+
+std::string resolver_problema(int numSub, int dimensiones, int **matriz)
 {
     struct Solucion solucion;
-    struct Candidato pretendiente;
-    int *candidatos = new int[dimensiones];
+    struct Candidato pretendiente;    
+    std::list<int> candidatos;
+    int *indicesSeleccionados = new int[dimensiones];
+    std::string salida = "";
 
+    // Llenamos la lista de los indice del 0 al dimensiones-1
+    for (int i = 0; i < dimensiones; i++)
+    {
+        candidatos.push_back(i);
+        indicesSelecionados[i] = 0;
+    }
+
+    // Calculamos la solución para dos que es diferente
+    // Es diferente a la forma que calculamos el resto de cosas
     solucion = solucionDos(dimensiones, matriz);
 
-    if (solucion.tamano < numSub)
+    for (int i = 2; i < numSub; i++)
     {
-        for (int i = 0; i < dimensiones; i++)
-        {
-            candidatos[i] = i;
-        }
 
-        candidatos[solucion.indices[0]] = -1;
-        candidatos[solucion.indices[1]] = -1;
-
-        while (solucion.tamano < numSub)
-        {
-            // pretendiente = calcularSiguiente(solucion.indices, candidatos, dimensiones, matriz);            
-            // int * indices = new int[solucion.tamano +1];
-
-        }
+        pretendiente = calcularSiguiente(solucion.indices, candidatos, dimensiones, matriz);
+        candidatos.remove(pretendiente.indice);
+        solucion.indices.push_back(pretendiente.indice);
+        solucion.totalDistancia = pretendiente.totalDistancia;
     }
-    return "";
+
+    // Aquí Pasamos a string la solución con el formato de salida
+
+    salida += std::to_string(solucion.totalDistancia) + "\n";
+
+    for(std::list<int>::iterator it = solucion.indices.start(); it != Solucion.indices.end(); it++){
+        indicesSeleccionados[*(it)] = 1;
+    }
+    for (int i = 0; i< dimensiones; i++){
+        salida += indicesSeleccionados[i] + " ";
+    }
+    salida.pop_back()
+    salida += "\n";
+    return salida;
 }
 
 int main()
