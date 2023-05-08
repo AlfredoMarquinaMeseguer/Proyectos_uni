@@ -1,4 +1,3 @@
-# This is a sample Python script.
 import dataclasses
 from typing import Tuple, Any
 
@@ -12,35 +11,8 @@ class Solucion:
     total: int
 
 
-def combinaciones_2(dimensiones) -> list[list[int]]:
-    lista = []
-    for i in range(0, dimensiones):
-        for j in range(i + 1, dimensiones):
-            lista.append([i, j])
-    return lista
-
-
-def combinaciones_2_de_lista(lista: [int]) -> list[Tuple[int, int]]:
-    sol = []
-    for i in range(0, len(lista)):
-        for j in range(i + 1, len(lista)):
-            sol.append((lista[i], lista[j]))
-    return sol
-
-
-def combinaciones_2_con_n(lista: [int], n: int) -> list[list[int]]:
-    sol = []
-    for i in lista:
-        sol.append([i, n])
-    return sol
-
-
 def calculas_distancia(i, j, matriz) -> int:
     return matriz[i][j] + matriz[j][i]
-
-
-def calcular_distancias_listas(lista, matriz) -> int:
-    return [calculas_distancia(i[0], i[1], matriz) for i in lista]
 
 
 def solucion_con_dos(dimensiones, matriz) -> Solucion:
@@ -83,48 +55,6 @@ def resolver_problema(matriz: [[int]], len_matriz: int, num_subs: int):
     return solution
 
 
-def calcular_max(lista: list[list[int], int]) -> Tuple[list[list[int] | int], int]:
-    indice_del_max = 0
-
-    for i in range(1, len(lista)):
-        if lista[i][1] > lista[indice_del_max][1]:
-            indice_del_max = i
-
-    return lista[indice_del_max], indice_del_max
-
-
-def entrada():
-    file = open("entrada.txt")
-    num_problemas = file.readline()
-
-    for _ in num_problemas:
-        # Esto en c++ se puede poner directamente en dos variables
-        dimensiones_subconjuntos = file.readline().split()
-        # EN c++ hay que declarar directamente
-        matriz = []
-
-        for i in dimensiones_subconjuntos[0]:
-            for j in dimensiones_subconjuntos[0]:
-                linea = [int(a) for a in file.readline().split()]
-                matriz.append(linea)
-
-        print(resolver_problema(matriz, dimensiones_subconjuntos[1], dimensiones_subconjuntos[0]))
-
-        # Press the green button in the gutter to run the script.
-
-
-def calcular_pares(dimensiones: int, matriz):
-    combi = combinaciones_2(dimensiones)
-    pares = []
-
-    for i in combi:
-        pares.append([i, calculas_distancia(i[0], i[1], matriz)])
-
-    # TODO: Ordenar por distancia
-
-    return pares
-
-
 def str_respuesta(solucion, dimensiones) -> Tuple[str, str]:
     salida_list = []
     for _ in range(dimensiones):
@@ -151,8 +81,6 @@ def distancia_total(lista: list[int], matriz: list[list[int]]) -> int:
 
 
 def calc_siguiente(en_sol: list[int], candidatos: list[int], matriz: list[list[int]]):
-    pass
-    calc = []
     maxi_indice = -1
     maxi = 0
     # Utilizamos el range para simular c++
