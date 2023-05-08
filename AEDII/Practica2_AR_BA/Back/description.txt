@@ -10,9 +10,7 @@ Entrada
 
 La entrada comienza con una línea con un único entero positivo que indica el número de casos de prueba que vienen a
 continuación.
-Después viene una línea en blanco, y también habrá una línea en blanco entre cada dos casos de prueba
-consecutivos.
-
+Después viene una línea en blanco, y también habrá una línea en blanco entre cada dos casos de prueba consecutivos.
 La primera línea de cada caso contiene n, el número de participantes en el juego. A continuación vienen n líneas.
 La primera línea indica el peso de la persona 1, la segunda el peso de la persona 2, y así sucesivamente.
 Cada peso es un entero entre 1 y 450. Habrá como máximo 30 participantes en el juego.
