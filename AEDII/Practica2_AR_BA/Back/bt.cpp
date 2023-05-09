@@ -22,26 +22,29 @@ int diferencia(Solucion equipos) {
     return abs(a - b);
 }
 
-Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos) {
+Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos, int mitadCandidatos) {
     // if (equipos.equipoA.size() < equipos.equipoB.size() - 1 || equipos.equipoA.size() > equipos.equipoB.size() + 1) {
     //     return nullptr;
     // } else if (candidatos.empty()) {
     //     return new Solucion(equipos);
     // }
 
+    // tamaño del vectorA  > (candidatos/2 + candidatos%2 ) or vectorB >(candidatos/2 + candidatos%2 )
     if (candidatos.empty()) {
         if (equipos.equipoA.size() < equipos.equipoB.size() - 1 || equipos.equipoA.size() > equipos.equipoB.size() + 1) {
             return nullptr;
         } else {
             return new Solucion(equipos);
         }
+    }else if (equipos.equipoA.size() > mitadCandidatos || equipos.equipoB.size() > mitadCandidatos){
+        return nullptr;
     }
 
     Solucion* solucion = nullptr;
     int difer = numeric_limits<int>::max(); // int.max no me va pero el numeric_limits este si
     vector<int> copia_candidatos(candidatos);
     // vector<int> copia_candidatos = candidatos;
-    // tamaño del vector A candidatos
+    
     int participante = copia_candidatos[0];
     copia_candidatos.erase(copia_candidatos.begin());
     // copia_candidatos.pop_front();
@@ -50,7 +53,7 @@ Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos) {
     Solucion copia_equipos(equipos);
     // Solucion copia_equipos =     equipos;
     copia_equipos.equipoA.push_back(participante);
-    Solucion* pretendiente1 = backtracking(copia_candidatos, copia_equipos);
+    Solucion* pretendiente1 = backtracking(copia_candidatos, copia_equipos, mitadCandidatos);
 
     // Comprobamos
     if ((pretendiente1 != nullptr && solucion != nullptr && diferencia(*pretendiente1) < difer) ||
@@ -65,7 +68,7 @@ Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos) {
     // Probamos a ponerlo en el equipo B
     Solucion copia_equipos2(equipos);
     copia_equipos2.equipoB.push_back(participante);
-    Solucion* pretendiente2 = backtracking(copia_candidatos, copia_equipos2);
+    Solucion* pretendiente2 = backtracking(copia_candidatos, copia_equipos2, mitadCandidatos);
 
     if ((pretendiente2 != nullptr && solucion != nullptr && diferencia(*pretendiente2) < difer) ||
             (pretendiente2 != nullptr && solucion == nullptr)) {
@@ -103,8 +106,8 @@ int main() {
         // getline(aux, cin);
         // Fin Entrada
 
-        Solucion equipos{{}, {}};       
-        auto solucion = backtracking(candidatos, equipos);
+        Solucion equipos{{}, {}};
+        auto solucion = backtracking(candidatos, equipos, (candidatos.size()/2) + (candidatos.size()%2));
         if (solucion == nullptr) {
             // No debería ocurrir nunca
             cout << "No se encontr� soluci�n" << endl;
@@ -129,9 +132,9 @@ int main() {
                 cout << pesoB << " " << pesoA << endl;
             
         }          
-        delete equipos;
         delete solucion;    
-        delete candidatos;
+        // delete &equipos;
+        // delete &candidatos;
     }   
 
     return 0;

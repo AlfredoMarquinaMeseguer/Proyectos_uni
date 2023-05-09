@@ -2,12 +2,14 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <vector>
 
 using namespace std;
 
 struct Solucion
 {
-    int *indices;
+    vector<int> indices;
+    int tamano;
     int totalDistancia;
 };
 
@@ -26,36 +28,40 @@ struct Solucion solucionDos(int dimensiones, int **matriz)
 {
     int candidato;
     struct Solucion solucion;
-    solucion.indices = new int[2];
+    int * indices = new int[2];
     solucion.tamano = 2;
     solucion.totalDistancia = 0;
 
-    for (int i = 0; i < dimensiones; i++)
+    for (int i = 0; i < dimensiones - 1; i++)
     {
-        for (int j = i; j < dimensiones; j++)
+        for (int j = i + 1; j < dimensiones; j++)
         {
             candidato = calcularDistancia(i, j, matriz);
             if (candidato > solucion.totalDistancia)
             {
-                solucion.indices[0] = i;
-                solucion.indices[1] = j;
+                indices[0] = i;
+                indices[1] = j;
                 solucion.totalDistancia = candidato;
             }
         }
     }
+    solucion.indices.push_back(indices[0]);
+    solucion.indices.push_back(indices[1]);
+
+    delete indices;
 
     return solucion;
 }
 
-int distanciaEntreListaYNumero(std::list<int> indices, int indice_cand, int **matriz)
-{
-    int total = 0;
-    for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
-    {
-        total += matriz[i][j] + matriz[j][i];
-    }
-    return total;
-}
+// int distanciaEntreListaYNumero(std::list<int> indices, int indice_cand, int **matriz)
+// {
+//     int total = 0;
+//     for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
+//     {
+//         total += matriz[i][j] + matriz[j][i];
+//     }
+//     return total;
+// }
 
 struct Candidato calcularSiguiente(std::list<int> indices, std::list<int> candidatos, int **matriz)
 {
@@ -70,7 +76,13 @@ struct Candidato calcularSiguiente(std::list<int> indices, std::list<int> candid
     {
         // for(std::list<int>::iterator it_candidatos = candidatos.begin(); it_candidatos != candidatos.end(); it_candidatos++){
         it_indices = indices.begin();
-        pretendiente = distanciaEntreListaYNumero(indices, *(it_candidatos), matriz) if (pretendiente > elegido.totalDistancia)
+        pretendiente = 0;
+        for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
+        {
+            pretendiente += matriz[i][j] + matriz[j][i];
+        }
+
+        if (pretendiente > elegido.totalDistancia)
         {
             elegido.indice = *(it_candidato);
             elegido.totalDistancia = pretendiente;
