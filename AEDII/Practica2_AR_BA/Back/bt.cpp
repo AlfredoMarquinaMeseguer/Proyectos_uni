@@ -37,12 +37,14 @@ Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos) {
         }
     }
 
-    Solucion* solution = nullptr;
+    Solucion* solucion = nullptr;
     int difer = numeric_limits<int>::max(); // int.max no me va pero el numeric_limits este si
     vector<int> copia_candidatos(candidatos);
     // vector<int> copia_candidatos = candidatos;
+    // tamaño del vector A candidatos
     int participante = copia_candidatos[0];
     copia_candidatos.erase(copia_candidatos.begin());
+    // copia_candidatos.pop_front();
 
     // Probamos a ponerlo en el equipo A
     Solucion copia_equipos(equipos);
@@ -51,10 +53,13 @@ Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos) {
     Solucion* pretendiente1 = backtracking(copia_candidatos, copia_equipos);
 
     // Comprobamos
-    if ((pretendiente1 != nullptr && solution != nullptr && diferencia(*pretendiente1) < difer) ||
-            (pretendiente1 != nullptr && solution == nullptr)) {
-        solution = pretendiente1;
-        difer = diferencia(*solution);
+    if ((pretendiente1 != nullptr && solucion != nullptr && diferencia(*pretendiente1) < difer) ||
+            (pretendiente1 != nullptr && solucion == nullptr)) {
+        delete solucion;
+        solucion = pretendiente1;
+        difer = diferencia(*solucion);
+    }else{
+        delete pretendiente1;
     }
 
     // Probamos a ponerlo en el equipo B
@@ -62,18 +67,20 @@ Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos) {
     copia_equipos2.equipoB.push_back(participante);
     Solucion* pretendiente2 = backtracking(copia_candidatos, copia_equipos2);
 
-    if ((pretendiente2 != nullptr && solution != nullptr && diferencia(*pretendiente2) < difer) ||
-            (pretendiente2 != nullptr && solution == nullptr)) {
-        solution = pretendiente2;
-        difer = diferencia(*solution);
+    if ((pretendiente2 != nullptr && solucion != nullptr && diferencia(*pretendiente2) < difer) ||
+            (pretendiente2 != nullptr && solucion == nullptr)) {
+        delete solucion;
+        solucion = pretendiente2;
+        difer = diferencia(*solucion);
+    }else{
+        delete pretendiente2;
     }
 
-    return solution;
+    return solucion;
 }
 
 int main() {
-    int problemas, numCandidatos, candidatoActual, pesoA, pesoB;
-    char * aux = new char[1];
+    int problemas, numCandidatos, candidatoActual, pesoA, pesoB;    
     //vector<int> cant = {450, 106, 87, 66, 75, 372, 215, 6, 304, 291, 25, 88, 133, 221, 85, 108, 105, 381, 323, 352, 130, 100};
     vector<int> candidatos;
     vector<int> candidatos2 = {450, 106, 87, 66, 75, 372, 215, 6, 304, 291, 25, 88, 133, 221, 85, 108, 105, 381, 323, 352, 130, 100};
@@ -121,7 +128,10 @@ int main() {
             else
                 cout << pesoB << " " << pesoA << endl;
             
-        }            
+        }          
+        delete equipos;
+        delete solucion;    
+        delete candidatos;
     }   
 
     return 0;
