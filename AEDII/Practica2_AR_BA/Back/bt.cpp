@@ -22,7 +22,7 @@ int diferencia(Solucion equipos) {
     return abs(a - b);
 }
 
-Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos, int mitadCandidatos) {
+Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos, unsigned int mitadCandidatos) {
     // if (equipos.equipoA.size() < equipos.equipoB.size() - 1 || equipos.equipoA.size() > equipos.equipoB.size() + 1) {
     //     return nullptr;
     // } else if (candidatos.empty()) {
@@ -82,6 +82,25 @@ Solucion* backtracking(vector<int>& candidatos, const Solucion& equipos, int mit
     return solucion;
 }
 
+Solucion* backtrackingInicio(vector<int>& candidatos, const Solucion& equipos, unsigned int mitadCandidatos) {
+    Solucion* solucion;
+    int difer = numeric_limits<int>::max(); // int.max no me va pero el numeric_limits este si
+    vector<int> copia_candidatos(candidatos);
+    // vector<int> copia_candidatos = candidatos;
+    
+    int participante = copia_candidatos[0];
+    copia_candidatos.erase(copia_candidatos.begin());
+    // copia_candidatos.pop_front();
+
+    // Probamos a ponerlo en el equipo A
+    Solucion copia_equipos(equipos);
+    // Solucion copia_equipos =     equipos;
+    copia_equipos.equipoA.push_back(participante);
+    solucion = backtracking(copia_candidatos, copia_equipos, mitadCandidatos);
+
+    return solucion;
+}
+
 int main() {
     int problemas, numCandidatos, candidatoActual, pesoA, pesoB;    
     //vector<int> cant = {450, 106, 87, 66, 75, 372, 215, 6, 304, 291, 25, 88, 133, 221, 85, 108, 105, 381, 323, 352, 130, 100};
@@ -107,7 +126,7 @@ int main() {
         // Fin Entrada
 
         Solucion equipos{{}, {}};
-        auto solucion = backtracking(candidatos, equipos, (candidatos.size()/2) + (candidatos.size()%2));
+        auto solucion = backtrackingInicio(candidatos, equipos, (candidatos.size()/2) + (candidatos.size()%2));
         if (solucion == nullptr) {
             // No debería ocurrir nunca
             cout << "No se encontr� soluci�n" << endl;
