@@ -39,37 +39,37 @@ void backtracking(int *candidatos, int n, bool *elementosActuales, int elementos
 }
 
 
-void resolver(int *arr, int n)
+void resolver(int *candidatos, int n)
 {
-    bool *curr_elements = new bool[n];
+    bool *elementoActual = new bool[n];
 
 
-    bool *soln = new bool[n];
+    bool *solucion = new bool[n];
 
-    int min_diff = INT_MAX;
+    int difrenciaMin = INT_MAX;
 
-    int sum = 0;
+    int suma = 0;
     for (int i = 0; i < n; i++)
     {
-        sum += arr[i];
-        curr_elements[i] = false;
-        soln[i] = false;
+        suma += candidatos[i];
+        elementoActual[i] = false;
+        solucion[i] = false;
     }
 
 
-    backtracking(arr, n, curr_elements, 0, soln, &min_diff, sum, 0, 0);
+    backtracking(candidatos, n, elementoActual, 0, solucion, &difrenciaMin, suma, 0, 0);
 
     int total1 = 0;
     int  total2 = 0;
     for (int i = 0; i < n; i++)
     {
-        if (soln[i] == true)
+        if (solucion[i] == true)
         {
-            total1 += arr[i];
+            total1 += candidatos[i];
         }
         else
         {
-            total2 += arr[i];
+            total2 += candidatos[i];
         }
     }
 
