@@ -8,7 +8,7 @@ using namespace std;
 
 struct Solucion
 {
-    vector<int> indices;
+    list<int> indices;
     int tamano;
     int totalDistancia;
 };
@@ -67,11 +67,15 @@ struct Candidato calcularSiguiente(std::list<int> indices, std::list<int> candid
 {
     struct Candidato elegido;
     int pretendiente;
-    std::list<int>::iterator it_indices;
-
+    std::list<int>::iterator it_indices;        
     std::list<int>::iterator it_candidatos = candidatos.begin();
-    elegido.indice = *(it_candidato);
-    elegido.totalDistancia = distanciaEntreListaYNumero(indices, *(it_candidatos), matriz);
+elegido.indice = *(it_candidatos);
+    elegido.totalDistancia = 0;
+        for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
+        {
+            elegido.totalDistancia += matriz[*(it)][*(it_candidatos)] + matriz[*(it_candidatos)][*(it)];
+        }
+    it_candidatos++;
     while (it_candidatos != candidatos.end())
     {
         // for(std::list<int>::iterator it_candidatos = candidatos.begin(); it_candidatos != candidatos.end(); it_candidatos++){
@@ -79,12 +83,12 @@ struct Candidato calcularSiguiente(std::list<int> indices, std::list<int> candid
         pretendiente = 0;
         for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
         {
-            pretendiente += matriz[i][j] + matriz[j][i];
+            pretendiente += matriz[*(it)][*(it_candidatos)] + matriz[*(it_candidatos)][*(it)];
         }
 
         if (pretendiente > elegido.totalDistancia)
         {
-            elegido.indice = *(it_candidato);
+            elegido.indice = *(it_candidatos);
             elegido.totalDistancia = pretendiente;
         }
         it_candidatos++;
@@ -93,7 +97,7 @@ struct Candidato calcularSiguiente(std::list<int> indices, std::list<int> candid
     return elegido;
 }
 
-std::string resolver_problema(int numSub, int dimensiones, int **matriz)
+struct Solucion resolver_problema(int numSub, int dimensiones, int **matriz)
 {
     struct Solucion solucion;
     struct Candidato pretendiente;    
@@ -105,7 +109,7 @@ std::string resolver_problema(int numSub, int dimensiones, int **matriz)
     for (int i = 0; i < dimensiones; i++)
     {
         candidatos.push_back(i);
-        indicesSelecionados[i] = 0;
+        indicesSeleccionados[i] = 0;
     }
 
     // Calculamos la solución para dos que es diferente
@@ -114,31 +118,65 @@ std::string resolver_problema(int numSub, int dimensiones, int **matriz)
 
     for (int i = 2; i < numSub; i++)
     {
-
-        pretendiente = calcularSiguiente(solucion.indices, candidatos, dimensiones, matriz);
+        pretendiente = calcularSiguiente(solucion.indices, candidatos, matriz);
         candidatos.remove(pretendiente.indice);
         solucion.indices.push_back(pretendiente.indice);
         solucion.totalDistancia = pretendiente.totalDistancia;
     }
 
     // Aquí Pasamos a string la solución con el formato de salida
-
-    salida += std::to_string(solucion.totalDistancia) + "\n";
-
-    for(std::list<int>::iterator it = solucion.indices.start(); it != Solucion.indices.end(); it++){
-        indicesSeleccionados[*(it)] = 1;
-    }
-    for (int i = 0; i< dimensiones; i++){
-        salida += indicesSeleccionados[i] + " ";
-    }
-    salida.pop_back()
-    salida += "\n";
-    
-    return salida;
+   
+    return solucion;
 }
 
 int main()
 {
+    int numCasos;
+    int dimensiones, numSubpoblaciones;
+    int ** matriz;
+
+    cin >> numCasos;
+    for( int i =0; i< numCasos; ++i){
+        cin >> dimensiones >> numSubpoblaciones;
+        matriz = new int*[dimensiones];
+        for (int i = 0; i < dimensiones; i++)
+        {
+            matriz[i] = new int[dimensiones];
+        }
+        
+
+        for(int j=0; j<dimensiones; ++j){
+            for(int k=0; k<dimensiones; ++k){
+                // int aux;
+                // cin >> aux;
+                // matriz[i][j] = aux;
+                cin >> matriz[i][j];
+            }
+        }
+
+        // cout << resolver_problema(numSubpoblaciones,dimensiones,matriz);
+        struct Solucion sol = resolver_problema(numSubpoblaciones,dimensiones,matriz);
+
+        cout << std::to_string(sol.totalDistancia) << endl;
+        int * salida = new int[dimensiones];
+        for(int i= 0; i< dimensiones; ++i){
+            salida[i] = 0;
+        }
+        for(list<int>::iterator it = sol.indices.begin(); it != sol.indices.end(); ++it){
+            salida[*(it)] = 1;
+        }
+
+        for(int i= 0; i< dimensiones-1; ++i){
+            cout << salida[i] << " ";
+        } 
+        cout << salida[dimensiones-1] << endl;
+
+        for (int i = 0; i < dimensiones; i++)
+        {
+            delete matriz[i];
+        }
+        delete matriz;
+    }
 
     return 0;
 }

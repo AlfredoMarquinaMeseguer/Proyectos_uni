@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <cmath>
 
+#pragma GCC target( "sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+#pragma GCC optimize("Ofast,no-stack-protector,unroll-loops,fast-math,O3")
+
 using namespace std;
 
 struct Solucion {
