@@ -113,7 +113,7 @@ Solucion resolver_problema(int numSub, int dimensiones, int **matriz)
         indicesSeleccionados[i] = 0;
     }
 
-    // Calculamos la solución para dos que es diferente
+    // Calculamos la soluciÃ³n para dos que es diferente
     // Es diferente a la forma que calculamos el resto de cosas
     solucion = solucionDos(dimensiones, matriz);
 
@@ -125,7 +125,7 @@ Solucion resolver_problema(int numSub, int dimensiones, int **matriz)
         solucion.totalDistancia = pretendiente.totalDistancia;
     }
 
-    // Aquí Pasamos a string la solución con el formato de salida
+    // AquÃ­ Pasamos a string la soluciÃ³n con el formato de salida
 
     return solucion;
 }
@@ -156,11 +156,7 @@ int main()
         }
         // cout << resolver_problema(numSubpoblaciones,dimensiones,matriz);
         Solucion sol = resolver_problema(numSubpoblaciones,dimensiones,matriz);
-        stringstream ss;
-        int solucionDisInt = sol.totalDistancia;
-        ss << solucionDisInt;
-        string solucionDis = ss.str();
-        cout << solucionDis << endl;
+        cout << to_string(sol.totalDistancia) << endl;
         int * salida = new int[dimensiones];
         for(int i= 0; i< dimensiones; ++i){
             salida[i] = 0;
