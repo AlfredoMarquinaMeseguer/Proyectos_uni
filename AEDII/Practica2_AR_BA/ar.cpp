@@ -3,6 +3,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -24,10 +25,10 @@ int calcularDistancia(int i, int j, int **matriz)
     return matriz[i][j] + matriz[j][i];
 }
 
-struct Solucion solucionDos(int dimensiones, int **matriz)
+Solucion solucionDos(int dimensiones, int **matriz)
 {
     int candidato;
-    struct Solucion solucion;
+    Solucion solucion;
     int * indices = new int[2];
     solucion.tamano = 2;
     solucion.totalDistancia = 0;
@@ -63,25 +64,25 @@ struct Solucion solucionDos(int dimensiones, int **matriz)
 //     return total;
 // }
 
-struct Candidato calcularSiguiente(std::list<int> indices, std::list<int> candidatos, int **matriz)
+Candidato calcularSiguiente(list<int> indices, list<int> candidatos, int **matriz)
 {
-    struct Candidato elegido;
+    Candidato elegido;
     int pretendiente;
-    std::list<int>::iterator it_indices;        
-    std::list<int>::iterator it_candidatos = candidatos.begin();
-elegido.indice = *(it_candidatos);
+    list<int>::iterator it_indices;
+    list<int>::iterator it_candidatos = candidatos.begin();
+    elegido.indice = *(it_candidatos);
     elegido.totalDistancia = 0;
-        for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
+        for (list<int>::iterator it = indices.begin(); it != indices.end(); it++)
         {
             elegido.totalDistancia += matriz[*(it)][*(it_candidatos)] + matriz[*(it_candidatos)][*(it)];
         }
     it_candidatos++;
     while (it_candidatos != candidatos.end())
     {
-        // for(std::list<int>::iterator it_candidatos = candidatos.begin(); it_candidatos != candidatos.end(); it_candidatos++){
+        // for(std::list<int>::iterator it_candidatos = candidatos.begin(); it_candidatos != candidatos.end(); it_candidatos++)
         it_indices = indices.begin();
         pretendiente = 0;
-        for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
+        for (list<int>::iterator it = indices.begin(); it != indices.end(); it++)
         {
             pretendiente += matriz[*(it)][*(it_candidatos)] + matriz[*(it_candidatos)][*(it)];
         }
@@ -97,13 +98,13 @@ elegido.indice = *(it_candidatos);
     return elegido;
 }
 
-struct Solucion resolver_problema(int numSub, int dimensiones, int **matriz)
+Solucion resolver_problema(int numSub, int dimensiones, int **matriz)
 {
-    struct Solucion solucion;
-    struct Candidato pretendiente;    
-    std::list<int> candidatos;
+    Solucion solucion;
+    Candidato pretendiente;
+    list<int> candidatos;
     int *indicesSeleccionados = new int[dimensiones];
-    std::string salida = "";
+    string salida = "";
 
     // Llenamos la lista de los indice del 0 al dimensiones-1
     for (int i = 0; i < dimensiones; i++)
@@ -112,7 +113,7 @@ struct Solucion resolver_problema(int numSub, int dimensiones, int **matriz)
         indicesSeleccionados[i] = 0;
     }
 
-    // Calculamos la solución para dos que es diferente
+    // Calculamos la soluci�n para dos que es diferente
     // Es diferente a la forma que calculamos el resto de cosas
     solucion = solucionDos(dimensiones, matriz);
 
@@ -121,11 +122,11 @@ struct Solucion resolver_problema(int numSub, int dimensiones, int **matriz)
         pretendiente = calcularSiguiente(solucion.indices, candidatos, matriz);
         candidatos.remove(pretendiente.indice);
         solucion.indices.push_back(pretendiente.indice);
-        solucion.totalDistancia = pretendiente.totalDistancia;
+        solucion.totalDistancia += pretendiente.totalDistancia; // faltaba aquí un += (2 horas buscandolo)
     }
 
-    // Aquí Pasamos a string la solución con el formato de salida
-   
+    // Aqu� Pasamos a string la soluci�n con el formato de salida
+
     return solucion;
 }
 
@@ -136,28 +137,26 @@ int main()
     int ** matriz;
 
     cin >> numCasos;
-    for( int i =0; i< numCasos; ++i){
+    for( int caso =0; caso< numCasos; ++caso){      // este array tambien estaba la inicializacion mal por eso los punteros
         cin >> dimensiones >> numSubpoblaciones;
         matriz = new int*[dimensiones];
         for (int i = 0; i < dimensiones; i++)
         {
             matriz[i] = new int[dimensiones];
         }
-        
+
 
         for(int j=0; j<dimensiones; ++j){
             for(int k=0; k<dimensiones; ++k){
                 // int aux;
                 // cin >> aux;
                 // matriz[i][j] = aux;
-                cin >> matriz[i][j];
+                cin >> matriz[j][k];
             }
         }
-
         // cout << resolver_problema(numSubpoblaciones,dimensiones,matriz);
-        struct Solucion sol = resolver_problema(numSubpoblaciones,dimensiones,matriz);
-
-        cout << std::to_string(sol.totalDistancia) << endl;
+        Solucion sol = resolver_problema(numSubpoblaciones,dimensiones,matriz);
+        cout << to_string(sol.totalDistancia) << endl;
         int * salida = new int[dimensiones];
         for(int i= 0; i< dimensiones; ++i){
             salida[i] = 0;
@@ -168,7 +167,7 @@ int main()
 
         for(int i= 0; i< dimensiones-1; ++i){
             cout << salida[i] << " ";
-        } 
+        }
         cout << salida[dimensiones-1] << endl;
 
         for (int i = 0; i < dimensiones; i++)
