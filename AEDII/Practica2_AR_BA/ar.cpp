@@ -54,16 +54,6 @@ struct Solucion solucionDos(int dimensiones, int **matriz)
     return solucion;
 }
 
-// int distanciaEntreListaYNumero(std::list<int> indices, int indice_cand, int **matriz)
-// {
-//     int total = 0;
-//     for (std::list<int>::iterator it = indices.begin(); it != indices.end(); it++)
-//     {
-//         total += matriz[i][j] + matriz[j][i];
-//     }
-//     return total;
-// }
-
 struct Candidato calcularSiguiente(std::list<int> indices, std::list<int> candidatos, int **matriz)
 {
     struct Candidato elegido;
