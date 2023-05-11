@@ -18,9 +18,10 @@ def calculas_distancia(i, j, matriz) -> int:
 def solucion_con_dos(dimensiones, matriz) -> Solucion:
     pareja_ganadora = []
     maxi = 0
-    for i in range(0, dimensiones):
+    for i in range(0, dimensiones -1):
         for j in range(i + 1, dimensiones):
             candidato = calculas_distancia(i, j, matriz)
+            print("candidatos:", candidato, i, j)
             if candidato > maxi:
                 pareja_ganadora = [i, j]
                 maxi = candidato
@@ -29,7 +30,7 @@ def solucion_con_dos(dimensiones, matriz) -> Solucion:
 
 
 # len_matriz no es necesaria
-def resolver_problema(matriz: [[int]], len_matriz: int, num_subs: int):
+def resolver_problema(matriz:list[list[int]], len_matriz: int, num_subs: int):
     # La solución para dos es diferente al resto de soluciones
     # Una vez obtenida se va añadiendo a ella.
     solution = solucion_con_dos(len_matriz, matriz)
@@ -106,6 +107,7 @@ if __name__ == '__main__':
                [3, 3, 4, 0, 4, 7],
                [2, 5, 7, 5, 0, 6],
                [4, 8, 5, 6, 8, 0]]
+    print(resolver_problema(matriz, 4, 2))
     print(resolver_problema(matriz, 4, 3))
     print(resolver_problema(matriz2, dimensiones, num_sub))
     # pares = calcular_pares(4)
@@ -113,8 +115,4 @@ if __name__ == '__main__':
     #
     # for i in  str_respuesta(solucion, 4):
     #     print(i)
-    b = list(range(4))
-    a = [0, 4, 2, 3, 4]
-    # a.pop(4)
-    print(a)
-    print(b)
+

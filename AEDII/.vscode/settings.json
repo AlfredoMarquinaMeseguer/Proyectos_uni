@@ -48,6 +48,12 @@
         "bit": "cpp",
         "compare": "cpp",
         "concepts": "cpp",
-        "numbers": "cpp"
+        "numbers": "cpp",
+        "forward_list": "cpp",
+        "unordered_set": "cpp",
+        "regex": "cpp",
+        "format": "cpp",
+        "span": "cpp",
+        "stacktrace": "cpp"
     }
 }
