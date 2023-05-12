@@ -7,12 +7,13 @@ def imprimeMatriz(dimensiones):
             if i == j:
                 matriz += str(0)
             else:
-                matriz += random.randint(0,255)
+                matriz += str(random.randint(0,255))
             
             if j == dimensiones-1:                
                 matriz += "\n"
             else:
                 matriz += " "
+    return matriz
 
 def generar_input(dimensiones: int, subpoblaciones: int, inputfilename: str="in2.txt") -> None:
     input_file = open(inputfilename, 'w')
