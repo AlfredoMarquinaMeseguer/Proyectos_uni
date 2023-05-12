@@ -1,0 +1,30 @@
+# import time
+matriz = []
+def imprimeMatriz(dimensiones):
+    for i in range(dimensiones-1):
+        for j in range(dimensiones-1):
+            if i == j:
+                matriz[i][j] = 0
+            else:
+                matriz[i][j] = random.randint(0,255)
+            if j == dimensiones-1:
+                print(matriz[i][j])
+                print("\n")
+            else:
+                print(matriz[i][j])
+                print(" ")
+
+def generar_input(inputfilename: str="in2.txt") -> None:
+    input_file = open(inputfilename, 'w')
+    for dimensiones in range(4, 100):
+        for subpoblaciones in range(2, dimensiones-1):
+            input_file.write(1)
+            input_file.write(dimensiones + " " + subpoblaciones)
+            input_file.write(imprimeMatriz(dimensiones))
+            # a = time.now()
+            # ejecutar el programa
+            # b = time.now()
+            # df.loc[len(df)]
+	        # df.add(m, n, b-a)
+    
+    input_file.close() 
