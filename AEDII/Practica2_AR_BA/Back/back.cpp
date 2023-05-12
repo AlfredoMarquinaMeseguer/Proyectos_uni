@@ -81,6 +81,8 @@ void resolver(int *candidatos, int n)
     {   
         cout << total2 << " " << total1 << endl;
     }
+    delete elementoActual;
+    delete solucion;
 }
 
 int main()
