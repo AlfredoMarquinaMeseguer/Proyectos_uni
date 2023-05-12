@@ -52,3 +52,43 @@ def pruebas(n: int, nombre_entrada, nombre_salida: str, nombre_guardar: str):
             df.loc[len(df)] = [dimensiones, subpoblaciones, tiempo]
 	
     df.to_csv(nombre_guardar)
+
+### Para backtracking
+
+def generar_input(dimensiones: int, subpoblaciones: int, inputfilename: str="in2.txt") -> None:
+    input_file = open(inputfilename, 'w')
+    input_file.write(str(1)+"\n")
+    input_file.write(dimensiones + "\n")
+    for i in range(dimensiones):
+        input_file.write(str(random.randint(0,255))+"\n")        
+    input_file.write("\n")        
+    input_file.close() 
+    
+def ejecutar_programa(nombre_entrada: str, nombre_salida: str) -> None:
+    fichero_entrada = open(nombre_entrada, "r")
+    fichero_salida = open(nombre_salida, "w")
+    
+    tiempo_inicio = round(time.time() * 1000)
+    # Ejecutar proceso 
+    proc = subprocess.Popen(["./a.out"], # Edita esto 
+                            stdin=fichero_entrada, stdout=fichero_salida)
+    proc.wait()
+    # Obtener final de ejecución
+    tiempo_final = round(time.time() * 1000)
+
+    # Cerrar ficheros de i/o
+    fichero_entrada.close()
+    fichero_salida.close()
+
+    return tiempo_final-tiempo_inicio
+    
+def pruebas(n: int, nombre_entrada, nombre_salida: str, nombre_guardar: str):
+    df: pd.DataFrame = pd.DataFrame(
+        columns=['dimensiones', 'tiempo_exec'])
+    for dimensiones in range(4, n+1):
+        generar_input(dimensiones, subpoblaciones, nombre_entrada)
+        tiempo = ejecutar_programa(nombre_entrada, nombre_salida)
+        df.loc[len(df)] = [dimensiones, tiempo]
+	
+    df.to_csv(nombre_guardar)
+
