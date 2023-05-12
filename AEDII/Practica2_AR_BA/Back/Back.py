@@ -10,7 +10,6 @@ class Solucion:
     equipoA: list[int]
     equipoB: list[int]
 
-
 def diferencia(equipos: Solucion) -> int:
     a = reduce(lambda x, y: x + y, equipos.equipoA)
     b = reduce(lambda x, y: x + y, equipos.equipoB)
@@ -18,17 +17,7 @@ def diferencia(equipos: Solucion) -> int:
 
 
 
-OUTSITE = 0
 def backtraking(candidatos, equipos: Solucion) -> Solucion | None:
-    # Pa contar e
-    global OUTSITE
-    OUTSITE += 1
-    # if len(equipos.equipoA) < len(equipos.equipoB) - 1 or len(
-    #         equipos.equipoA) > len(equipos.equipoB) + 1:
-    #     return None
-    # elif len(candidatos) == 0:
-    #     return equipos
-
     if len(candidatos) == 0:
         if len(equipos.equipoA) < len(equipos.equipoB) - 1 or len(
                 equipos.equipoA) > len(equipos.equipoB) + 1:
