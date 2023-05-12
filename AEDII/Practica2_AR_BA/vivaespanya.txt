@@ -1,15 +1,18 @@
+import pandas as pd
+
 def imprimeMatriz(dimensiones):
+    matriz = ""
     for i in range(dimensiones-1):
         for j in range(dimensiones-1):
             if i == j:
-                print(str(0))
+                matriz += str(0)
             else:
-                print(random.randint(0,255))            
+                matriz += random.randint(0,255)
             
             if j == dimensiones-1:                
-                print("\n")
+                matriz += "\n"
             else:
-                print(" ")
+                matriz += " "
 
 def generar_input(dimensiones: int, subpoblaciones: int, inputfilename: str="in2.txt") -> None:
     input_file = open(inputfilename, 'w')
