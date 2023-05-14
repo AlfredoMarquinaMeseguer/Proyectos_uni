@@ -1,6 +1,10 @@
 #ifndef __LISTA_SIMBOLOS__
 #define __LISTA_SIMBOLOS__
 
+#define false 0
+#define true 1
+typedef int bool;
+
 typedef enum { VARIABLE = 1, CONSTANTE = 2, CADENA = 3 } Tipo; 
 typedef struct Nodo {
   char *nombre;
@@ -20,5 +24,9 @@ int longitudLS(Lista lista);
 PosicionLista inicioLS(Lista lista);
 PosicionLista finalLS(Lista lista);
 PosicionLista siguienteLS(Lista lista, PosicionLista p);
+bool perteneceTablaS(char *nombre);
+void añadeEntrada(char *nombre);
+bool esConstante(Lista lista, PosicionLista p);
+void imprimirTablaS(Lista lista);
 
 #endif
