@@ -21,3 +21,4 @@
 #define             DIV_OP          21
 #define		    NUM		    22
 #define		    CADENA	    23
+#define		    REAL	    24

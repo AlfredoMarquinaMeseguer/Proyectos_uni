@@ -73,9 +73,9 @@ extern int yydebug;
     MIENTRAS = 274,                /* MIENTRAS  */
     POR_OP = 275,                  /* POR_OP  */
     DIV_OP = 276,                  /* DIV_OP  */
-    NUM = 277,                     /* NUM  */
+    CADENA = 277,                  /* CADENA  */
     ID = 278,                      /* ID  */
-    CADENA = 279,                  /* CADENA  */
+    NUM = 279,                     /* NUM  */
     UMENOS = 280                   /* UMENOS  */
   };
   typedef enum yytokentype yytoken_kind_t;
@@ -85,12 +85,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 9 "miniC.y"
+#line 14 "miniC.y"
 
-int entero; 
-char *cadena;
+char *lexema;
 
-#line 94 "miniC.tab.h"
+#line 93 "miniC.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

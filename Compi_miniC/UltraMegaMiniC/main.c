@@ -20,7 +20,7 @@ int main()
     yyin=fich;
     while (i=yylex()) {
         printf("TOKEN %d %s",i,yytext);
-        if(i==ID || i ==INTLITERAL || i == REALLIT) 
+        if(i == ID || i == NUM || i == REAL) 
         	printf(" LEXEMA %s  LONGITUD %d\n",yytext,yyleng);
         else printf("\n");}
     fclose(fich);

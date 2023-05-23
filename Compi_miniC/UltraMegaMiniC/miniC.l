@@ -9,7 +9,7 @@ entero              {digito}+
 %x COMENTARIO  
 %x ERROR
 %%
-	/*reglas en regex		acción realizada, normalmente codigo que devueLven*/					
+	/*reglas en regex		acción realizada, normalmente codigo que devuelven*/					
 [ \n\t]+                            ;
 "//"(.*)[\n]                        ;
 "/*"				{yymore(); BEGIN COMENTARIO;}
@@ -25,9 +25,10 @@ else						return SINO;
 while						return MIENTRAS;
 read                               		return LEER;
 print                               		return ESCRIBIR;
-(_|\$|{letra})({letra}|{digito}|_|\$){0,15}     return ID;
-entero			                        return NUM;
-"([^\\\"]|\\.)*"				return CADENA;
+(_|\$|{letra})({letra}|{digito}|_|\$){0,15}     return ID; {yylval.lexema=strdup(yytext);}
+entero			                        return NUM; {yylval.lexema=strdup(yytext);}
+"([^\\\"]|\\.)*"				return CADENA; {yylval.lexema=strdup(yytext);}
+{entero}[.]{entero}				return REAL
 "("                     		        return A_PAREN;		
 ")"		                                return C_PAREN;
 ";"             		                return SEMICOLON;
@@ -35,7 +36,7 @@ entero			                        return NUM;
 "="		                                return ASIG_OP; 
 "+"             		                return MAS_OP;
 "-"                             		return MENOS_OP;
-"*"                                             return MULT_OP;
+"*"                                             return POR_OP;
 "/"		                                return DIV_OP;
 "{"				                return A_LLAVE;
 "}"						return C_LLAVE;

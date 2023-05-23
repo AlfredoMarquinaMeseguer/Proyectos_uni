@@ -23,8 +23,6 @@ ain't nothing but a ...
 , ;
 
 void casa ( ) {
-	var c, b, d, e;
-	var a =1;
-	
-	
-	}
+	var a, c, b, d, e;
+	var a = 1;
+}
