@@ -98,35 +98,50 @@ bool perteneceTablaS(Lista lista, char *nombre) {
   return pos != final;
 }
 
-void añadeEntrada(Lista lista, char *nombre, Tipo tipo) {
+void anyadeEntrada(Lista lista, char *nombre, Tipo tipo) {
   PosicionLista ultimaPosicion = finalLS(lista);
   Simbolo nuevoSimbolo = {nombre, tipo};
   insertaLS(lista, ultimaPosicion, nuevoSimbolo);
 }
 
-bool esConstante(Lista lista, PosicionLista p) {
+bool esConstante(Lista lista, char *nombre) {
    Simbolo s;
-   s = recuperaLS(lista, p);
-   return (s.tipo == CONSTANTE);
+   PosicionLista pos = buscaLS(lista, nombre);
+   if (pos != finalLS(lista)) {
+    s = recuperaLS(lista, pos);
+    return (s.tipo == CONSTANTE);
+   }
    
 }
 
 void imprimirTablaS(Lista lista) {
+  printf("###################\n");
+  printf("# Seccion de datos\n");
+  printf("\t.data\n");
+  printf("\n");
   PosicionLista pos = inicioLS(lista); // Obtenemos la posición del primer elemento
-  //printf("%-15s%-15s%-15s%-15s\n", "Nombre", "Tipo", "Valor", "Constante"); // Imprimimos la     	cabecera de la tabla
+  Simbolo simbolo;
   
   while (pos != finalLS(lista)) { // Recorremos la lista hasta llegar al final
-    Simbolo simbolo = recuperaLS(lista, pos); // Obtenemos el simbolo de la posición actual
+    simbolo = recuperaLS(lista, pos); // Obtenemos el simbolo de la posición actual
     
     // Imprimimos la información del simbolo con formato según su tipo
-    if (simbolo.tipo == VARIABLE) {
-      printf("%-15s %-15s %-15d\n", simbolo.nombre, "Variable", simbolo.tipo);
-    } else if (simbolo.tipo == CONSTANTE) {
-      printf("%-15s %-15s %x\n", simbolo.nombre, "Constante", simbolo.tipo);
-    } else if (simbolo.tipo == CADENA) {
-      printf("%-15s %-15s %x\n", simbolo.nombre, "Cadena", simbolo.tipo);
+    if (simbolo.tipo == CADENA) {
+       printf("$str%d:\n", simbolo.valor);
+       printf("\t.asciiz %s\n", simbolo.nombre);
     }
     
     pos = siguienteLS(lista, pos); // Avanzamos a la siguiente posición
   }
+
+  pos = inicioLS(lista);
+  while (pos != finalLS(lista)) {
+    simbolo = recuperaLS(lista, pos);
+    if (simbolo.tipo != CADENA) {
+      printf("_%s:\n", simbolo.nombre);
+      printf("\t.word 0\n");
+    }
+    pos = siguienteLS(lista, pos);
+  }
+  printf("\n");
 }

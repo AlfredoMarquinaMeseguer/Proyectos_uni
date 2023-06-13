@@ -24,8 +24,9 @@ int longitudLS(Lista lista);
 PosicionLista inicioLS(Lista lista);
 PosicionLista finalLS(Lista lista);
 PosicionLista siguienteLS(Lista lista, PosicionLista p);
-void añadeEntrada(Lista lista, char *nombre, Tipo tipo);
-bool esConstante(Lista lista, PosicionLista p);
+bool perteneceTablaS(Lista lista, char *nombre);
+void anyadeEntrada(Lista lista, char *nombre, Tipo tipo);
+bool esConstante(Lista lista, char *nombre);
 void imprimirTablaS(Lista lista);
 
 #endif
