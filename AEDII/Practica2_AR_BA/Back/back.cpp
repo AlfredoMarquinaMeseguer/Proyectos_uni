@@ -81,7 +81,83 @@ void resolver(int *candidatos, int n)
     {   
         cout << total2 << " " << total1 << endl;
     }
-    delete elementoActual;
+}
+
+
+bool * backtracking_v2(int* candidatos, int n )
+{    
+    
+    int elementosSelecionados=0, 
+        suma = 0, 
+        sumaActual = 0, 
+        posicionActual = 0;
+    bool *elementosActuales = new bool[n];
+    bool *solucion = new bool[n];
+    int diferenciaMin = INT_MAX;
+    for (int i = 0; i < n; i++) {
+        suma += candidatos[i];
+        elementosActuales[i] = false;
+        solucion[i] = false;
+    }
+
+    int iteraciones = pow(2,n);
+    int i = iteraciones/2;
+    // Coinducición de todas las posibilidades y segunda condición de solución
+    while ( i < iteraciones and diferenciaMin != 0 ) {
+        // Reiniciar variables en cada iteración
+        elementosSelecionados = 0;
+        sumaActual = 0;
+        // Función genera este bucle
+        for (int j = 0; j < n; j++)
+        {
+            elementosActuales[j] = (i & (1 << j)) != 0;
+            if (elementosActuales[j])
+            {
+                elementosSelecionados++;
+                sumaActual += candidatos[j];
+            }
+        }
+
+        // Comprobar criterio
+        if (elementosSelecionados == n / 2 && abs(suma / 2 - sumaActual) < diferenciaMin) // Criterio
+        {
+            diferenciaMin = abs(suma / 2 - sumaActual);
+            for (int j = 0; j < n; j++)
+                solucion[j] = elementosActuales[j];
+        }
+        i++;
+    }
+    
+    delete elementosActuales;
+    return solucion;
+}
+
+void resolver_v2(int *candidatos, int n)
+{
+    bool * solucion = backtracking_v2(candidatos, n);
+
+    int total1 = 0;
+    int  total2 = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (solucion[i] == true)
+        {
+            total1 += candidatos[i];
+        }
+        else
+        {
+            total2 += candidatos[i];
+        }
+    }
+
+    if (total1 < total2)
+    {
+        cout << total1 << " " << total2 << endl;
+    }
+    else
+    {   
+        cout << total2 << " " << total1 << endl;
+    }
     delete solucion;
 }
 
@@ -100,7 +176,9 @@ int main()
             cin >> candidatoActual;
             candidatos[j] =  candidatoActual;
         }
-        resolver(candidatos, numCandidatos);        
+        // resolver(candidatos, numCandidatos);         
+        resolver_v2(candidatos, numCandidatos); 
+        // cout << "*******************************" << endl;
         delete candidatos;
     }
     return 0;

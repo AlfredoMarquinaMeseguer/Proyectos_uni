@@ -143,5 +143,5 @@ void imprimirTablaS(Lista lista) {
     }
     pos = siguienteLS(lista, pos);
   }
-  printf("\n");
+  printf("\n")
 }

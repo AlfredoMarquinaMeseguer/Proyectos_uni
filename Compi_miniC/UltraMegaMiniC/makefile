@@ -1,10 +1,10 @@
 miniC: lex.yy.c miniC.tab.c main.c listaSimbolos.c listaCodigo.c
-	gcc lex.yy.c miniC.tab.c main.c listaSimbolos.c listaCodigo.c -lfl -o miniC
-miniC.l miniC.h: miniC.y
+	gcc -g lex.yy.c miniC.tab.c main.c listaSimbolos.c listaCodigo.c -lfl -o miniC
+miniC.tab.h miniC.tab.c: miniC.y
 	bison -d -v miniC.y
-lex.yy.c: calc.l
-	flex calc.l
+lex.yy.c: miniC.l miniC.tab.h
+	flex miniC.l
 limpia:
-	rm lex.yy.c miniC.tab.C main.c listaSimbolos.c listaCodigo.c miniC
-run: 
+	rm -f lex.yy.c miniC.tab.* miniC.output miniC
+run: 	miniC p
 	./miniC p

@@ -48,4 +48,5 @@ void guardaResLC(ListaC codigo, char *res);
 /* Recupera el registro resultado de una lista de código */
 char * recuperaResLC(ListaC codigo);
 
+
 #endif
