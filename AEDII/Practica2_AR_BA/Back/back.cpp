@@ -9,6 +9,7 @@ bool *backtracking_v2(int *candidatos, int n)
     bool *solucion = new bool[n];
     float diferenciaMin = INT_MAX;
     float suma = 0;
+    bool mejorSol = false;
     for (int i = 0; i < n; i++)
     {
         // cout << candidatos[i] << " " << suma << endl;
@@ -40,16 +41,21 @@ bool *backtracking_v2(int *candidatos, int n)
             }
         }
         // Comprobar criterio
-        if ((elementosSelecionados == n / 2 || elementosSelecionados == n / 2 + n % 2) && abs((suma / 2) - sumaActual) < diferenciaMin) // Criterio
+        if ((elementosSelecionados == n / 2 || elementosSelecionados == n / 2 + n % 2) && 
+             abs((suma / 2) - sumaActual) < diferenciaMin) // Criterio
         {
 
             diferenciaMin = abs((suma / 2) - sumaActual);
             // cout <<  diferenciaMin << " " << suma << " " <<  sumaActual << endl;
             for (int j = 0; j < n; j++)
                 solucion[j] = elementosActuales[j];
+            
+            if (diferenciaMin == minimo){
+                mejorSol = true;
+            }
         }
         i++;
-    }while (i < iteraciones and diferenciaMin != minimo);
+    }while (i < iteraciones and !mejorSol);
 
     delete elementosActuales;
     return solucion;
