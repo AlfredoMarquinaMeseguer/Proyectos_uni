@@ -1,14 +1,6 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <climits>
 using namespace std;
-
-void imprimir_array(int * ar, int n){
-  for(int i =0; i< n ; i++){
-    cout << ar[i] << " ";
-  }
-  cout << std::endl;
-
-}
-
 
 int *backtracking_v2(int *candidatos, int n) {
   int elementosSelecionados = 0, sumaActual = 0;
@@ -19,16 +11,15 @@ int *backtracking_v2(int *candidatos, int n) {
   bool mejorSol = false;
 
   for (int i = 0; i < n; i++) {
-    // cout << candidatos[i] << " " << suma << endl;
     suma += candidatos[i];
     elementosActuales[i] = -1;
   }
   elementosActuales[0] = 0;
 
-  int iteraciones = pow(2, n - 1);
+
   int nivel = 1;
   // Condición de todas las posibilidades y segunda condición de solución
-  // and diferenciaMin != 0
+
   float minimo = n % 2 / 2.0;
 
   elementosSelecionados = 0;
@@ -39,9 +30,6 @@ int *backtracking_v2(int *candidatos, int n) {
     elementosActuales[nivel] += 1;
     sumaActual += candidatos[nivel] * elementosActuales[nivel]; // Bact
     elementosSelecionados += elementosActuales[nivel];  // Pact
-    // imprimir_array(elementosActuales, n);         
-    // cout << elementosSelecionados << " suma " << sumaActual << endl;
-    // imprimir_array(elementosActuales, n);
     // Solucion
     if (nivel + 1 == n &&
         (elementosSelecionados == n / 2 ||
@@ -59,28 +47,20 @@ int *backtracking_v2(int *candidatos, int n) {
       }
     }
     // Criterio
-    // cout << (nivel +1 < n) << " " << (elementosSelecionados != n / 2)  << " " <<         (elementosSelecionados != n / 2 + n % 2) << " " << std::endl;
-    // cout << "elementos actuales nivel "<< nivel << " valor " << elementosActuales[nivel] << endl;
-    if (nivel + 1 < n  //&& elementosSelecionados != n / 2 &&
-        //elementosSelecionados != n / 2 + n % 2) {
-    ){
+    if (nivel + 1 < n){
       nivel++;
     } else {
       // Mas hermanos
-      // cout << "Mas hermanos " << nivel << endl;
-      // cout << "nivel: " << nivel << endl;      
       while (!elementosActuales[nivel] < 1) {
         elementosSelecionados -= elementosActuales[nivel];
         sumaActual -= candidatos[nivel] * elementosActuales[nivel]; // Bact
         elementosActuales[nivel] = -1;
         nivel--;
-        // cout << "Dentro " << nivel <<  endl;
       }
     }
 
   } while (nivel != 0  and !mejorSol); // hasta nivel == 0 + poda
-  
-  // cout << "mejor Sol: " << mejorSol << endl;
+   
 
   delete elementosActuales;
   return solucion;
@@ -104,9 +84,6 @@ void resolver_v2(int *candidatos, int n) {
   } else {
     std::cout << total2 << " " << total1 << std::endl;
   }
-
-  // imprimir_array(solucion, n);
-  // cout << "****************************" << endl;
   delete solucion;
   
 }
