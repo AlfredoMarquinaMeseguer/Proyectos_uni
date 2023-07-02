@@ -1,6 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+void imprimir_array(int * ar, int n){
+  for(int i =0; i< n ; i++){
+    cout << ar[i] << " ";
+  }
+  cout << std::endl;
+
+}
+
+
 int *backtracking_v2(int *candidatos, int n) {
   int elementosSelecionados = 0, sumaActual = 0;
   int *elementosActuales = new int[n];
@@ -14,7 +23,7 @@ int *backtracking_v2(int *candidatos, int n) {
     suma += candidatos[i];
     elementosActuales[i] = -1;
   }
-  elementosActuales[n - 1] = 0;
+  elementosActuales[0] = 0;
 
   int iteraciones = pow(2, n - 1);
   int nivel = 1;
@@ -25,11 +34,14 @@ int *backtracking_v2(int *candidatos, int n) {
   elementosSelecionados = 0;
   sumaActual = 0;
   do {
-        cout << "Hola" << std::endl;
+
     // Generar
     elementosActuales[nivel] += 1;
     sumaActual += candidatos[nivel] * elementosActuales[nivel]; // Bact
-    elementosSelecionados += elementosActuales[nivel];          // Pact
+    elementosSelecionados += elementosActuales[nivel];  // Pact
+    // imprimir_array(elementosActuales, n);         
+    // cout << elementosSelecionados << " suma " << sumaActual << endl;
+    // imprimir_array(elementosActuales, n);
     // Solucion
     if (nivel + 1 == n &&
         (elementosSelecionados == n / 2 ||
@@ -47,20 +59,28 @@ int *backtracking_v2(int *candidatos, int n) {
       }
     }
     // Criterio
-    if (nivel + 1 < n && elementosSelecionados != n / 2 &&
-        elementosSelecionados != n / 2 + n % 2) {
+    // cout << (nivel +1 < n) << " " << (elementosSelecionados != n / 2)  << " " <<         (elementosSelecionados != n / 2 + n % 2) << " " << std::endl;
+    // cout << "elementos actuales nivel "<< nivel << " valor " << elementosActuales[nivel] << endl;
+    if (nivel + 1 < n  //&& elementosSelecionados != n / 2 &&
+        //elementosSelecionados != n / 2 + n % 2) {
+    ){
       nivel++;
     } else {
       // Mas hermanos
-      while (elementosActuales[nivel] < 1) {
+      // cout << "Mas hermanos " << nivel << endl;
+      // cout << "nivel: " << nivel << endl;      
+      while (!elementosActuales[nivel] < 1) {
         elementosSelecionados -= elementosActuales[nivel];
-        sumaActual += candidatos[nivel] * elementosActuales[nivel]; // Bact
+        sumaActual -= candidatos[nivel] * elementosActuales[nivel]; // Bact
         elementosActuales[nivel] = -1;
-        nivel -= 1;
+        nivel--;
+        // cout << "Dentro " << nivel <<  endl;
       }
     }
 
-  } while (nivel != 1  and !mejorSol); // hasta nivel ==0 + poda
+  } while (nivel != 0  and !mejorSol); // hasta nivel == 0 + poda
+  
+  // cout << "mejor Sol: " << mejorSol << endl;
 
   delete elementosActuales;
   return solucion;
@@ -68,7 +88,7 @@ int *backtracking_v2(int *candidatos, int n) {
 
 void resolver_v2(int *candidatos, int n) {
   int *solucion = backtracking_v2(candidatos, n);
-
+  
   int total1 = 0;
   int total2 = 0;
   for (int i = 0; i < n; i++) {
@@ -84,7 +104,11 @@ void resolver_v2(int *candidatos, int n) {
   } else {
     std::cout << total2 << " " << total1 << std::endl;
   }
+
+  // imprimir_array(solucion, n);
+  // cout << "****************************" << endl;
   delete solucion;
+  
 }
 
 int main() {
