@@ -281,10 +281,9 @@ print_item 	: expression {
 				aux.arg2=NULL;
 				//Insertamos el codigo en la lista
 				insertaLC($$,finalLC($$),aux); }
-		| STRING { anyadeEntrada(lista, $1, CADENA, contCadenas);
-					contCadenas++;
-
-					int numCadena = contCadenas;
+		| STRING { 
+					contCadenas++; 
+					anyadeEntrada(lista, $1, CADENA, contCadenas);
 
 					$$=creaLC();
 
@@ -302,7 +301,7 @@ print_item 	: expression {
 
                     //Para hacer cadena que indica cadenas hay que hacer $str (4) + 000(3) + 0(1)=\0
                     char * cadena = (char *) malloc(4+3+1);
-                    sprintf(cadena, "$str%d", numCadena);
+                    sprintf(cadena, "$str%d", contCadenas);
                     aux.arg1 = cadena;
                     aux.arg2 = NULL;
                     //Insertamos el codigo en la lista
@@ -467,14 +466,3 @@ void imprimirCodigo(ListaC codigo) {
  	p = siguienteLC(codigo,p);
  }
 }
-
-int anyadeCadena(char * simbolo){
-    Simbolo aux;
-    aux.nombre=simbolo;
-    aux.tipo=CADENA;
-    aux.valor=contCadenas;
-
-    insertaLS(lista,finalLS(lista),aux);
-    return contCadenas;
-}
-
