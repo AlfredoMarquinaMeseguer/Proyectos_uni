@@ -284,7 +284,7 @@ print_item 	: expression {
 		| STRING { anyadeEntrada(lista, $1, CADENA, contCadenas);
 					contCadenas++;
 
-					int numCadena = anyadeCadena($1);
+					int numCadena = contCadenas;
 
 					$$=creaLC();
 

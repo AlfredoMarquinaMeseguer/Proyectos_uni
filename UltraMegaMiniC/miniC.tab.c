@@ -1510,7 +1510,7 @@ yyreduce:
                          { anyadeEntrada(lista, (yyvsp[0].lexema), CADENA, contCadenas);
 					contCadenas++;
 
-					int numCadena = anyadeCadena((yyvsp[0].lexema));
+					int numCadena = contCadenas;
 
 					(yyval.codigo)=creaLC();
 
