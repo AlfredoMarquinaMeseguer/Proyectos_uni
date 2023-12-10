@@ -29,6 +29,7 @@ var                                             return VAR;
 const                                           return CONST;
 if                                              return SI;
 else                                            return SINO;
+hacer                                           return HACER;
 while                                           return MIENTRAS;
 read                                            return LEER;
 print                                           return ESCRIBIR;

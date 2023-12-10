@@ -27,11 +27,13 @@ ListaC codigo;
 
 %type <codigo> expression statement statement_list print_item print_list read_list declarations identifier_list asig
 
-%token EMPIEZA LEER ESCRIBIR A_PAREN C_PAREN SEMICOLON COMA ASIG_OP MAS_OP MENOS_OP A_LLAVE C_LLAVE VAR CONST SI SINO MIENTRAS POR_OP DIV_OP REAL
+%token EMPIEZA LEER ESCRIBIR A_PAREN C_PAREN SEMICOLON COMA ASIG_OP MAS_OP MENOS_OP A_LLAVE C_LLAVE VAR CONST SI SINO MIENTRAS POR_OP DIV_OP REAL HACER
 %token<lexema> STRING ID NUM
 %left MAS_OP MENOS_OP
 %left POR_OP DIV_OP
 %precedence UMENOS
+
+%define parse.error verbose
 
 %expect 1 /* conflicto desplazamiento/reduccion */
 
@@ -243,6 +245,37 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 			aux.arg1=NULL;
 			aux.arg2=NULL;
 			insertaLC($$,finalLC($$),aux); }
+		| HACER statement MIENTRAS A_PAREN expression C_PAREN SEMICOLON {
+			char * etiq = nuevaEtiqueta();
+
+			Operacion aux;
+
+			insertaLC($$,finalLC($$),aux);
+
+
+			//Añadir etiqueta
+			aux.op = concatena(etiq, ":");
+			aux.res=NULL;
+			aux.arg1=NULL;
+			aux.arg2=NULL;
+			insertaLC($$,finalLC($$),aux);
+			
+			// Añadimos statement
+			concatenaLC($$,$2);
+
+			// Añadimos expression
+			concatenaLC($$,$5);
+
+			// Añadimos bnez
+			aux.op="beqz";
+			aux.res=recuperaResLC($5);
+			aux.arg1=etiq;
+			aux.arg2=NULL;
+			insertaLC($$,finalLC($$),aux);
+            liberaLC($2);
+			liberaLC($5);
+			liberarReg(aux.res);
+		}		
 		| ESCRIBIR print_list SEMICOLON { $$ = $2; }
 		| LEER read_list SEMICOLON { $$ = $2; }
 		| error SEMICOLON { $$ = creaLC(); }
@@ -449,10 +482,10 @@ expression 	: expression MAS_OP expression {
 
 %%
 
-void yyerror()
+void yyerror(const char *msg)
 {
 	numErroresSint++;
-	printf("Error sintactico en linea %d. \n",yylineno);
+    printf("Error en linea %d: %s\n", yylineno, msg);
 }
 
 void imprimirCodigo(ListaC codigo) {

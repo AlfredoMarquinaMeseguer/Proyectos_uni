@@ -22,3 +22,4 @@
 #define		    NUM		    22
 #define		    CADENA	    23
 #define		    REAL	    24
+#define         HACER       25

@@ -80,10 +80,11 @@ extern int yydebug;
     POR_OP = 275,                  /* POR_OP  */
     DIV_OP = 276,                  /* DIV_OP  */
     REAL = 277,                    /* REAL  */
-    STRING = 278,                  /* STRING  */
-    ID = 279,                      /* ID  */
-    NUM = 280,                     /* NUM  */
-    UMENOS = 281                   /* UMENOS  */
+    HACER = 278,                   /* HACER  */
+    STRING = 279,                  /* STRING  */
+    ID = 280,                      /* ID  */
+    NUM = 281,                     /* NUM  */
+    UMENOS = 282                   /* UMENOS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -97,7 +98,7 @@ union YYSTYPE
 char *lexema;
 ListaC codigo;
 
-#line 101 "miniC.tab.h"
+#line 102 "miniC.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
