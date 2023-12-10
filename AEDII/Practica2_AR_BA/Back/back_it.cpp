@@ -34,10 +34,10 @@ int *backtracking_v2(int *candidatos, int n) {
     if (nivel + 1 == n &&
         (elementosSelecionados == n / 2 ||
          elementosSelecionados == n / 2 + n % 2) &&
-        abs((suma / 2) - sumaActual) < diferenciaMin) // bact > voa
+        std::abs((suma / 2) - sumaActual) < diferenciaMin) // bact > voa
     {
 
-      diferenciaMin = abs((suma / 2) - sumaActual);
+      diferenciaMin = std::abs((suma / 2) - sumaActual);
       for (int j = 0; j < n; j++)
         solucion[j] = elementosActuales[j];
 
