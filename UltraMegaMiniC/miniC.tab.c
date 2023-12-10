@@ -543,8 +543,8 @@ static const yytype_int16 yyrline[] =
 {
        0,    40,    40,    40,    58,    58,    62,    62,    66,    69,
       70,    76,    79,    94,    98,   102,   118,   119,   170,   195,
-     246,   247,   248,   251,   252,   258,   284,   318,   346,   376,
-     387,   398,   409,   420,   428,   429,   439
+     246,   247,   248,   251,   252,   258,   284,   319,   347,   377,
+     388,   399,   410,   421,   429,   430,   440
 };
 #endif
 
@@ -1234,7 +1234,7 @@ yyreduce:
 
   case 11: /* asig: ID  */
 #line 76 "miniC.y"
-                     {if (!perteneceTablaS(lista, (yyvsp[0].lexema))) anyadeEntrada(lista, (yyvsp[0].lexema), tipo);
+                     {if (!perteneceTablaS(lista, (yyvsp[0].lexema))) anyadeEntrada(lista, (yyvsp[0].lexema), tipo, 0);
  			else { printf("Variable %s ya declarada \n",(yyvsp[0].lexema)); numErroresSem++;}
  			(yyval.codigo)=creaLC();}
 #line 1241 "miniC.tab.c"
@@ -1242,7 +1242,7 @@ yyreduce:
 
   case 12: /* asig: ID ASIG_OP expression  */
 #line 79 "miniC.y"
-                                        { if (!perteneceTablaS(lista, (yyvsp[-2].lexema))) anyadeEntrada(lista, (yyvsp[-2].lexema), tipo);
+                                        { if (!perteneceTablaS(lista, (yyvsp[-2].lexema))) anyadeEntrada(lista, (yyvsp[-2].lexema), tipo, 0);
  						else { printf("Variable %s ya declarada \n",(yyvsp[-2].lexema)); numErroresSem++;}
  						(yyval.codigo)=(yyvsp[0].codigo);
 
@@ -1507,7 +1507,8 @@ yyreduce:
 
   case 26: /* print_item: STRING  */
 #line 284 "miniC.y"
-                         {anyadeEntrada(lista, (yyvsp[0].lexema), CADENA);contCadenas++;
+                         { anyadeEntrada(lista, (yyvsp[0].lexema), CADENA, contCadenas);
+					contCadenas++;
 
 					int numCadena = anyadeCadena((yyvsp[0].lexema));
 
@@ -1539,11 +1540,11 @@ yyreduce:
                     aux.arg2=NULL;
                     //Insertamos el codigo en la lista
                     insertaLC((yyval.codigo),finalLC((yyval.codigo)),aux);}
-#line 1543 "miniC.tab.c"
+#line 1544 "miniC.tab.c"
     break;
 
   case 27: /* read_list: ID  */
-#line 318 "miniC.y"
+#line 319 "miniC.y"
                      {if (!perteneceTablaS(lista, (yyvsp[0].lexema))) { printf("Variable %s no declarada \n",(yyvsp[0].lexema)); numErroresSem++;}
  		     else if (esConstante(lista, (yyvsp[0].lexema))) { printf("Asignación a constante\n"); numErroresSem++;}
                     (yyval.codigo)=creaLC();
@@ -1572,11 +1573,11 @@ yyreduce:
 
                     //Insertar codigo
                     insertaLC((yyval.codigo),finalLC((yyval.codigo)),aux); }
-#line 1576 "miniC.tab.c"
+#line 1577 "miniC.tab.c"
     break;
 
   case 28: /* read_list: read_list COMA ID  */
-#line 346 "miniC.y"
+#line 347 "miniC.y"
                                     {if (!perteneceTablaS(lista, (yyvsp[0].lexema))) { printf("Variable %s no declarada \n",(yyvsp[0].lexema)); numErroresSem++; }
 				    else if (esConstante(lista, (yyvsp[0].lexema))) { printf("Asignación a constante\n"); numErroresSem++;}
 						(yyval.codigo)=(yyvsp[-2].codigo);
@@ -1605,11 +1606,11 @@ yyreduce:
 
 						//Insertar codigo
 						insertaLC((yyval.codigo),finalLC((yyval.codigo)),aux); }
-#line 1609 "miniC.tab.c"
+#line 1610 "miniC.tab.c"
     break;
 
   case 29: /* expression: expression MAS_OP expression  */
-#line 376 "miniC.y"
+#line 377 "miniC.y"
                                                {
 							(yyval.codigo)=(yyvsp[-2].codigo);
 							concatenaLC((yyval.codigo),(yyvsp[0].codigo));
@@ -1621,11 +1622,11 @@ yyreduce:
 							insertaLC((yyval.codigo),finalLC((yyval.codigo)),oper);
 							liberaLC((yyvsp[0].codigo));
 							liberarReg(oper.arg2); }
-#line 1625 "miniC.tab.c"
+#line 1626 "miniC.tab.c"
     break;
 
   case 30: /* expression: expression MENOS_OP expression  */
-#line 387 "miniC.y"
+#line 388 "miniC.y"
                                                  {
 							(yyval.codigo) = (yyvsp[-2].codigo);
 							concatenaLC((yyval.codigo),(yyvsp[0].codigo));
@@ -1637,11 +1638,11 @@ yyreduce:
 							insertaLC((yyval.codigo),finalLC((yyval.codigo)),oper);
 							liberaLC((yyvsp[0].codigo));
 							liberarReg(oper.arg2); }
-#line 1641 "miniC.tab.c"
+#line 1642 "miniC.tab.c"
     break;
 
   case 31: /* expression: expression POR_OP expression  */
-#line 398 "miniC.y"
+#line 399 "miniC.y"
                                                {
 							(yyval.codigo) = (yyvsp[-2].codigo);
 							concatenaLC((yyval.codigo),(yyvsp[0].codigo));
@@ -1653,11 +1654,11 @@ yyreduce:
 							insertaLC((yyval.codigo),finalLC((yyval.codigo)),oper);
 							liberaLC((yyvsp[0].codigo));
 							liberarReg(oper.arg2); }
-#line 1657 "miniC.tab.c"
+#line 1658 "miniC.tab.c"
     break;
 
   case 32: /* expression: expression DIV_OP expression  */
-#line 409 "miniC.y"
+#line 410 "miniC.y"
                                                {
 							(yyval.codigo) = (yyvsp[-2].codigo);
 							concatenaLC((yyval.codigo),(yyvsp[0].codigo));
@@ -1669,11 +1670,11 @@ yyreduce:
 							insertaLC((yyval.codigo),finalLC((yyval.codigo)),oper);
 							liberaLC((yyvsp[0].codigo));
 							liberarReg(oper.arg2); }
-#line 1673 "miniC.tab.c"
+#line 1674 "miniC.tab.c"
     break;
 
   case 33: /* expression: MENOS_OP expression  */
-#line 420 "miniC.y"
+#line 421 "miniC.y"
                                                    {
 							(yyval.codigo) = (yyvsp[0].codigo);
 							Operacion oper;
@@ -1682,17 +1683,17 @@ yyreduce:
 							oper.arg1 = recuperaResLC((yyvsp[0].codigo));
 							oper.arg2 = NULL;
 							insertaLC((yyval.codigo), finalLC((yyval.codigo)), oper); }
-#line 1686 "miniC.tab.c"
+#line 1687 "miniC.tab.c"
     break;
 
   case 34: /* expression: A_PAREN expression C_PAREN  */
-#line 428 "miniC.y"
+#line 429 "miniC.y"
                                              {(yyval.codigo) = (yyvsp[-1].codigo);}
-#line 1692 "miniC.tab.c"
+#line 1693 "miniC.tab.c"
     break;
 
   case 35: /* expression: ID  */
-#line 429 "miniC.y"
+#line 430 "miniC.y"
                      {if (!perteneceTablaS(lista, (yyvsp[0].lexema))) printf("Variable %s no declarada \n",(yyvsp[0].lexema));
 			(yyval.codigo) = creaLC();
  			Operacion oper;
@@ -1702,11 +1703,11 @@ yyreduce:
  			oper.arg2 = NULL;
  			insertaLC((yyval.codigo),finalLC((yyval.codigo)),oper);
  			guardaResLC((yyval.codigo),oper.res); }
-#line 1706 "miniC.tab.c"
+#line 1707 "miniC.tab.c"
     break;
 
   case 36: /* expression: NUM  */
-#line 439 "miniC.y"
+#line 440 "miniC.y"
                        { (yyval.codigo) = creaLC();
  			Operacion oper;
  			oper.op = "li";
@@ -1715,11 +1716,11 @@ yyreduce:
  			oper.arg2 = NULL;
  			insertaLC((yyval.codigo),finalLC((yyval.codigo)),oper);
  			guardaResLC((yyval.codigo),oper.res);  }
-#line 1719 "miniC.tab.c"
+#line 1720 "miniC.tab.c"
     break;
 
 
-#line 1723 "miniC.tab.c"
+#line 1724 "miniC.tab.c"
 
       default: break;
     }
@@ -1912,7 +1913,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 449 "miniC.y"
+#line 450 "miniC.y"
 
 
 void yyerror()

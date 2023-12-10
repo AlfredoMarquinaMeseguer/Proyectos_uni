@@ -73,10 +73,10 @@ identifier_list : asig { $$ = $1; }
 			liberaLC($3); }
 		;
 		
-asig 		: ID {if (!perteneceTablaS(lista, $1)) anyadeEntrada(lista, $1, tipo);
+asig 		: ID {if (!perteneceTablaS(lista, $1)) anyadeEntrada(lista, $1, tipo, 0);
  			else { printf("Variable %s ya declarada \n",$1); numErroresSem++;}
  			$$=creaLC();}
-		| ID ASIG_OP expression { if (!perteneceTablaS(lista, $1)) anyadeEntrada(lista, $1, tipo);
+		| ID ASIG_OP expression { if (!perteneceTablaS(lista, $1)) anyadeEntrada(lista, $1, tipo, 0);
  						else { printf("Variable %s ya declarada \n",$1); numErroresSem++;}
  						$$=$3;
 
@@ -281,7 +281,8 @@ print_item 	: expression {
 				aux.arg2=NULL;
 				//Insertamos el codigo en la lista
 				insertaLC($$,finalLC($$),aux); }
-		| STRING {anyadeEntrada(lista, $1, CADENA);contCadenas++;
+		| STRING { anyadeEntrada(lista, $1, CADENA, contCadenas);
+					contCadenas++;
 
 					int numCadena = anyadeCadena($1);
 

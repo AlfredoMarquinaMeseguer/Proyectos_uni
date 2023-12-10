@@ -98,9 +98,9 @@ bool perteneceTablaS(Lista lista, char *nombre) {
   return pos != final;
 }
 
-void anyadeEntrada(Lista lista, char *nombre, Tipo tipo) {
+void anyadeEntrada(Lista lista, char *nombre, Tipo tipo, int valor) {
   PosicionLista ultimaPosicion = finalLS(lista);
-  Simbolo nuevoSimbolo = {nombre, tipo};
+  Simbolo nuevoSimbolo = {nombre, tipo, valor};
   insertaLS(lista, ultimaPosicion, nuevoSimbolo);
 }
 
