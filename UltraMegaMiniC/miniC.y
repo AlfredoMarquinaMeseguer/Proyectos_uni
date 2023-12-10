@@ -426,7 +426,8 @@ expression 	: expression MAS_OP expression {
 							oper.arg2 = NULL;
 							insertaLC($$, finalLC($$), oper); }
 		| A_PAREN expression C_PAREN {$$ = $2;}
-		| ID {if (!perteneceTablaS(lista, $1)) printf("Variable %s no declarada \n",$1);
+		| ID {if (!perteneceTablaS(lista, $1)){ printf("Variable %s no declarada \n",$1);  numErroresSem++;}
+
 			$$ = creaLC();
  			Operacion oper;
  			oper.op = "lw";

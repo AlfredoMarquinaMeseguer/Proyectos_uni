@@ -4,4 +4,4 @@ Variable z no declarada
 ----------------------
 Errores lexicos: 0
 Errores sintacticos: 0
-Errores semanticos: 2
+Errores semanticos: 3

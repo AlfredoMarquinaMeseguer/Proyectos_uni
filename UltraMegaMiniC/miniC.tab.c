@@ -544,7 +544,7 @@ static const yytype_int16 yyrline[] =
        0,    40,    40,    40,    58,    58,    62,    62,    66,    69,
       70,    76,    79,    94,    98,   102,   118,   119,   170,   195,
      246,   247,   248,   251,   252,   258,   284,   318,   346,   376,
-     387,   398,   409,   420,   428,   429,   439
+     387,   398,   409,   420,   428,   429,   440
 };
 #endif
 
@@ -1693,7 +1693,8 @@ yyreduce:
 
   case 35: /* expression: ID  */
 #line 429 "miniC.y"
-                     {if (!perteneceTablaS(lista, (yyvsp[0].lexema))) printf("Variable %s no declarada \n",(yyvsp[0].lexema));
+                     {if (!perteneceTablaS(lista, (yyvsp[0].lexema))){ printf("Variable %s no declarada \n",(yyvsp[0].lexema));  numErroresSem++;}
+
 			(yyval.codigo) = creaLC();
  			Operacion oper;
  			oper.op = "lw";
@@ -1702,11 +1703,11 @@ yyreduce:
  			oper.arg2 = NULL;
  			insertaLC((yyval.codigo),finalLC((yyval.codigo)),oper);
  			guardaResLC((yyval.codigo),oper.res); }
-#line 1706 "miniC.tab.c"
+#line 1707 "miniC.tab.c"
     break;
 
   case 36: /* expression: NUM  */
-#line 439 "miniC.y"
+#line 440 "miniC.y"
                        { (yyval.codigo) = creaLC();
  			Operacion oper;
  			oper.op = "li";
@@ -1715,11 +1716,11 @@ yyreduce:
  			oper.arg2 = NULL;
  			insertaLC((yyval.codigo),finalLC((yyval.codigo)),oper);
  			guardaResLC((yyval.codigo),oper.res);  }
-#line 1719 "miniC.tab.c"
+#line 1720 "miniC.tab.c"
     break;
 
 
-#line 1723 "miniC.tab.c"
+#line 1724 "miniC.tab.c"
 
       default: break;
     }
@@ -1912,7 +1913,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 449 "miniC.y"
+#line 450 "miniC.y"
 
 
 void yyerror()
