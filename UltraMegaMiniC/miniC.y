@@ -246,6 +246,7 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 			aux.arg2=NULL;
 			insertaLC($$,finalLC($$),aux); }
 		| HACER statement MIENTRAS A_PAREN expression C_PAREN SEMICOLON {
+            $$=creaLC();
 			char * etiq = nuevaEtiqueta();
 
 			Operacion aux;
@@ -267,7 +268,7 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 			concatenaLC($$,$5);
 
 			// Añadimos bnez
-			aux.op="beqz";
+			aux.op="bnez";
 			aux.res=recuperaResLC($5);
 			aux.arg1=etiq;
 			aux.arg2=NULL;
