@@ -1,0 +1,72 @@
+INTRODUCE NOMBRE DE FICHERO FUENTE:
+TOKEN 258 void
+TOKEN 279 prueba
+TOKEN 261 (
+TOKEN 262 )
+TOKEN 268 {
+TOKEN 271 const
+TOKEN 279 a
+TOKEN 265 =
+Reconocido error en linea 2: 0.
+TOKEN 264 ,
+TOKEN 279 b
+TOKEN 265 =
+Reconocido error en linea 2: 0.
+TOKEN 263 ;
+TOKEN 270 var
+TOKEN 279 c
+TOKEN 265 =
+Reconocido error en linea 3: 5.
+TOKEN 266 +
+Reconocido error en linea 3: 2.
+TOKEN 267 -
+Reconocido error en linea 3: 2.
+TOKEN 263 ;
+TOKEN 260 print
+TOKEN 278 "Inicio del programa\n"
+TOKEN 263 ;
+TOKEN 272 if
+TOKEN 261 (
+TOKEN 279 a
+TOKEN 262 )
+TOKEN 260 print
+TOKEN 278 "a"
+TOKEN 264 ,
+TOKEN 278 "\n"
+TOKEN 263 ;
+TOKEN 273 else
+TOKEN 272 if
+TOKEN 261 (
+TOKEN 279 b
+TOKEN 262 )
+TOKEN 260 print
+TOKEN 278 "No a y b\n"
+TOKEN 263 ;
+TOKEN 273 else
+TOKEN 274 while
+TOKEN 261 (
+TOKEN 279 c
+TOKEN 262 )
+TOKEN 268 {
+TOKEN 260 print
+TOKEN 278 "c = "
+TOKEN 264 ,
+TOKEN 279 c
+TOKEN 264 ,
+TOKEN 278 "\n"
+TOKEN 263 ;
+TOKEN 279 c
+TOKEN 265 =
+TOKEN 279 c
+TOKEN 267 -
+Reconocido error en linea 10: 2.
+TOKEN 266 +
+Reconocido error en linea 10: 1.
+TOKEN 263 ;
+TOKEN 269 }
+TOKEN 260 print
+TOKEN 278 "Final"
+TOKEN 264 ,
+TOKEN 278 "\n"
+TOKEN 263 ;
+TOKEN 269 }
