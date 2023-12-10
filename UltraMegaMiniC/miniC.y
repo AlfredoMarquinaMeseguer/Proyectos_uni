@@ -116,7 +116,7 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 								liberarReg(aux.res);}
 								
 		| A_LLAVE statement_list C_LLAVE { $$ = $2; }
-		| SI A_PAREN expression C_PAREN statement SINO statement {
+		| SI A_PAREN expression C_PAREN statement SINO statement { 
 			$$=$3;
 			//Etiqueta 1
 			char * etiq1=nuevaEtiqueta();

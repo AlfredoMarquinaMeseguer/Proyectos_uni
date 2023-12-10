@@ -4,10 +4,9 @@ var c=5+2-2;
 print "Inicio del programa\n";
 if (a) print "a","\n";
     else if (b) print "No a y b\n";
-        else while (c) x=213
-        {
-            print "c = ",c,"\n";
-            c = c-2+1;
-        }
+        else while (c){
+    print "c = ",c,"\n";
+    c = c-2+1;
+}
     print "Final","\n";
 }

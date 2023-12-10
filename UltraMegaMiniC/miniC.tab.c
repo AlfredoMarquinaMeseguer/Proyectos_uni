@@ -1301,7 +1301,7 @@ yyreduce:
 
   case 17: /* statement: SI A_PAREN expression C_PAREN statement SINO statement  */
 #line 119 "miniC.y"
-                                                                         {
+                                                                         { 
 			(yyval.codigo)=(yyvsp[-4].codigo);
 			//Etiqueta 1
 			char * etiq1=nuevaEtiqueta();
