@@ -148,8 +148,8 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 			insertaLC($$,finalLC($$),aux);
 
 			//añadir etiqueta 1
-			aux.op=concatena(etiq1,":");
-			aux.res=NULL;
+			aux.op="etiq";
+			aux.res=etiq1;
 			aux.arg1=NULL;
 			aux.arg2=NULL;
 
@@ -162,8 +162,8 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 			liberaLC($7);
 
 			//Añadir etiqueta 2
-			aux.op=concatena(etiq2,":");
-			aux.res=NULL;
+			aux.op="etiq";
+			aux.res=etiq2;
 			aux.arg1=NULL;
 			aux.arg2=NULL;
 
@@ -187,8 +187,8 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 			concatenaLC($$,$5);
 
 			//Añadir etiqueta
-			aux.op=concatena(etiq,":");
-			aux.res=NULL;
+			aux.op="etiq";
+			aux.res=etiq;
 			aux.arg1=NULL;
 			aux.arg2=NULL;
 
@@ -202,8 +202,8 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 
 			//Añadir etiqueta 1
 			Operacion aux;
-			aux.op=concatena(etiq1,":");
-			aux.res=NULL;
+			aux.op="etiq";
+			aux.res=etiq1;
 			aux.arg1=NULL;
 			aux.arg2=NULL;
 
@@ -240,8 +240,8 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 			insertaLC($$,finalLC($$),aux);
 
 			//Añadir etiqueta 2
-			aux.op=concatena(etiq2,":");
-			aux.res=NULL;
+			aux.op = "etiq";
+			aux.res = etiq2;
 			aux.arg1=NULL;
 			aux.arg2=NULL;
 			insertaLC($$,finalLC($$),aux); }
@@ -255,8 +255,8 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 
 
 			//Añadir etiqueta
-			aux.op = concatena(etiq, ":");
-			aux.res=NULL;
+			aux.op = "etiq";
+			aux.res = etiq;
 			aux.arg1=NULL;
 			aux.arg2=NULL;
 			insertaLC($$,finalLC($$),aux);

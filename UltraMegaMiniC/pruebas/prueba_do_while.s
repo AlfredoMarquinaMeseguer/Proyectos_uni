@@ -37,7 +37,7 @@ main:
 	la $a0, $str2
 	syscall
 	lw $t0, _a
-	$l1:
+$l1:
 	li $v0, 4
 	la $a0, $str3
 	syscall
@@ -59,7 +59,7 @@ main:
 	syscall
 	li $t0, 5
 	sw $t0, _a
-	$l2:
+$l2:
 	lw $t0, _a
 	beqz $t0, $l3
 	li $v0, 4
@@ -77,7 +77,7 @@ main:
 	sub $t1, $t1, $t2
 	sw $t1, _a
 	b $l2
-	$l3:
+$l3:
 
 ##############
 # Fin

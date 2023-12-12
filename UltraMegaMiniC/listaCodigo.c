@@ -160,7 +160,7 @@ void imprimirListaC(ListaC listaCodigo) {
 
   while (pos != finalLC(listaCodigo)) {
     oper = recuperaLC(listaCodigo, pos);
-    if (oper.op != "etiq") {
+    if (strcmp(oper.op,"etiq")) {
       printf("\t%s", oper.op);
       if (oper.res) printf(" %s", oper.res);
       if (oper.arg1) printf(", %s", oper.arg1);
