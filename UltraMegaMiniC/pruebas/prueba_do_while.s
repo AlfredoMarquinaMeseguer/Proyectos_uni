@@ -3,7 +3,7 @@
 	.data
 
 $str1:
-	.asciiz "Primer do while"
+	.asciiz "Primer do while "
 $str2:
 	.asciiz "\n"
 $str3:
@@ -11,10 +11,12 @@ $str3:
 $str4:
 	.asciiz "\n"
 $str5:
-	.asciiz "\nSegundo do while\n"
+	.asciiz "\nSegundo con while "
 $str6:
-	.asciiz "El valor de a es "
+	.asciiz "\n"
 $str7:
+	.asciiz "El valor de a es "
+$str8:
 	.asciiz "\n"
 _a:
 	.word 0
@@ -54,23 +56,30 @@ $l1:
 	sw $t0, _a
 	lw $t0, _a
 	bnez $t0, $l1
+	li $t0, 5
+	sw $t0, _a
 	li $v0, 4
 	la $a0, $str5
 	syscall
-	li $t0, 5
-	sw $t0, _a
+	lw $t0, _a
+	li $v0, 1
+	move $a0, $t0
+	syscall
+	li $v0, 4
+	la $a0, $str6
+	syscall
 $l2:
 	lw $t0, _a
 	beqz $t0, $l3
 	li $v0, 4
-	la $a0, $str6
+	la $a0, $str7
 	syscall
 	lw $t1, _a
 	li $v0, 1
 	move $a0, $t1
 	syscall
 	li $v0, 4
-	la $a0, $str7
+	la $a0, $str8
 	syscall
 	lw $t1, _a
 	li $t2, 1
@@ -81,5 +90,6 @@ $l3:
 
 ##############
 # Fin
-	jr $ra
+	li $v0, 10
+	syscall
 

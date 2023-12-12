@@ -173,7 +173,8 @@ void imprimirListaC(ListaC listaCodigo) {
 
   printf("\n##############\n");
   printf("# Fin\n");
-  printf("\tjr $ra\n");;
+  printf("\tli $v0, 10\n");
+  printf("\tsyscall\n");
   printf("\n");
 
   free(registros);
