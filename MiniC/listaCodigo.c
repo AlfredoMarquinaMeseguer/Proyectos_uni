@@ -137,6 +137,8 @@ char *obtenerReg() {
 }
 
 void liberarReg(char *reg) {
+  // Registros tienen el número
+  // en la tercera posición
   int numRegistro = reg[2]-'0';
   registros[numRegistro]=0;
 }
