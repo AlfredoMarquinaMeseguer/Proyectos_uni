@@ -18,8 +18,6 @@ double caso2(double valor1, double valor2, std::string nombre)
     {
         sol = (valor1 + valor2) / (1.0 - std::min(std::abs(valor1), std::abs(valor2)));
     }
-    // TODO meter en el logger
-    std::cout << "Caso 2: " << nombre << ", " << sol << std::endl;
 
     return sol;
 }
@@ -36,7 +34,6 @@ double caso1(HechoAND *hechoAND)
         }
     }
     // TODO encontrar convención de poner nombre
-    SBRLogger::instancia()->usoCaso1(hechoAND);
     return min;
 }
 
@@ -51,7 +48,6 @@ double caso1(HechoOR *hechoOR)
             max = actual;
         }
     }
-    SBRLogger::instancia()->usoCaso1(hechoOR);
     return max;
 }
 

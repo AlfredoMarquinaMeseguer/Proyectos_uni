@@ -32,7 +32,7 @@ public:
     void addMeta(std::vector<Hecho *> metas);
     void addBH(Hecho *bh);
     void addBH(std::vector<Hecho *> elems);
-    void addCC(Regla *cc);
+    void addCC(Regla *cr);
     void addCC(std::vector<Regla *> elems);
 
     void eliminarMeta();

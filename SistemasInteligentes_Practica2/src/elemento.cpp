@@ -7,13 +7,19 @@ HechoAND::HechoAND(const std::vector<Elemento *> &hechos) : hechos(hechos) {}
 double HechoAND::evaluar()
 {
     if (this->factorCerteza == Elemento::SIN_CALCULAR)
+    {
         this->factorCerteza = caso1(this);
+        SBRLogger::instancia()->usoCaso1(this);
+    }
 
     return factorCerteza;
 }
 
-std::string HechoAND::getNombre() const
+std::string HechoAND::getNombre()
 {
+    if (!this->nombre.empty())
+        return this->nombre;
+
     std::string nombre = "";
 
     for (size_t i = 0; i < this->hechos.size(); ++i)
@@ -23,11 +29,23 @@ std::string HechoAND::getNombre() const
         // Imprimir la coma solo si no es el último elemento
         if (i < this->hechos.size() - 1)
         {
-            std::cout << " y ";
+            nombre.append(" y ");
         }
     }
 
+    this->nombre = nombre;
     return nombre;
+}
+std::vector<std::string> HechoAND::annadirNuevasMetas() 
+{
+    std::vector<std::string> nuevasMetas = {};
+    std::vector<std::string> sublista;
+    for (const auto &regla : this->hechos)
+    {
+        sublista = regla->annadirNuevasMetas();
+        nuevasMetas.insert(nuevasMetas.end(), sublista.begin(), sublista.end());
+    }
+    return nuevasMetas;
 }
 std::vector<Elemento *> HechoAND::getHechos()
 {
@@ -46,13 +64,19 @@ HechoOR::HechoOR(const std::vector<Elemento *> &hechos) : hechos(hechos) {}
 double HechoOR::evaluar()
 {
     if (this->factorCerteza == Elemento::SIN_CALCULAR)
+    {
         this->factorCerteza = caso1(this);
+        SBRLogger::instancia()->usoCaso1(this);
+    }
 
     return factorCerteza;
 }
 
-std::string HechoOR::getNombre() const
+std::string HechoOR::getNombre()
 {
+    if (!this->nombre.empty())
+        return this->nombre;
+
     std::string nombre = "";
 
     for (size_t i = 0; i < this->hechos.size(); ++i)
@@ -62,16 +86,29 @@ std::string HechoOR::getNombre() const
         // Imprimir la coma solo si no es el último elemento
         if (i < this->hechos.size() - 1)
         {
-            std::cout << " y ";
+            nombre.append(" o ");
         }
     }
 
+    this->nombre = nombre;
     return nombre;
 }
 
 std::vector<Elemento *> HechoOR::getHechos()
 {
     return this->hechos;
+}
+
+std::vector<std::string> HechoOR::annadirNuevasMetas() 
+{
+    std::vector<std::string> nuevasMetas = {};
+    std::vector<std::string> sublista;
+    for (const auto &regla : this->hechos)
+    {
+        sublista = regla->annadirNuevasMetas();
+        nuevasMetas.insert(nuevasMetas.end(), sublista.begin(), sublista.end());
+    }
+    return nuevasMetas;
 }
 
 HechoOR::~HechoOR()
@@ -94,10 +131,12 @@ double Regla::evaluar() // TODO: ponerlo con el logger correcto
 {
     SBRLogger::instancia()->aplicarRegla(this);
     // Caso 3
-    return 0.0;
+    double a = caso3(this);
+
+    return a;
 }
 
-std::string Regla::getNombre() const
+std::string Regla::getNombre()
 {
     return this->nombre;
 }
@@ -107,6 +146,11 @@ Hecho *Regla::getConsecuencia()
     return this->consecuencia;
 }
 
+std::vector<std::string> Regla::annadirNuevasMetas() 
+{
+    return {};
+}
+
 Elemento *Regla::getPrecondicion()
 {
     return this->hecho;
@@ -114,7 +158,6 @@ Elemento *Regla::getPrecondicion()
 
 Hecho::Hecho(std::string nombre, double factorCerteza) : nombre(nombre)
 {
-    std::cout << "Constructor de hecho " <<  factorCerteza << std::endl;
     if (factorCerteza == Elemento::SIN_CALCULAR)
     {
         this->factorCerteza = Elemento::SIN_CALCULAR;
@@ -122,15 +165,10 @@ Hecho::Hecho(std::string nombre, double factorCerteza) : nombre(nombre)
     if (factorCerteza > -1 && factorCerteza < 1)
     {
         this->factorCerteza = factorCerteza;
-        std::cout << "Antes de add BH 1" << std::endl;
-        SBRLogger::instancia()->addBH(this);
     }
-
     else
     {
         this->factorCerteza = this->SIN_CALCULAR;
-        std::cout << "Antes de add BH 2" << std::endl;
-        SBRLogger::instancia()->addBH(this);
     }
 }
 
@@ -148,10 +186,12 @@ void Hecho::calcularFactorCerteza()
     }
     else if (this->reglas.size() == 1)
     {
+        SBRLogger::instancia()->addCC(reglas);
         this->setFactorCerteza(this->reglas.front()->evaluar());
     }
     else if (this->reglas.size() == 2)
     {
+        SBRLogger::instancia()->addCC(reglas);
         this->setFactorCerteza(
             caso2(
                 this->reglas[0]->evaluar(),
@@ -163,6 +203,7 @@ void Hecho::calcularFactorCerteza()
     }
     else
     {
+        SBRLogger::instancia()->addCC(reglas);
         double valor = reglas[0]->evaluar();
         for (long unsigned int i = 1; i < this->reglas.size(); i++)
         {
@@ -184,9 +225,14 @@ double Hecho::evaluar()
     return this->factorCerteza;
 }
 
-std::string Hecho::getNombre() const
+std::string Hecho::getNombre()
 {
     return this->nombre;
+}
+
+std::vector<std::string> Hecho::annadirNuevasMetas()
+{
+    return {this->getNombre()};
 }
 
 void Hecho::addRegla(Regla *nuevaRegla)

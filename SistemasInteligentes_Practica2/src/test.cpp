@@ -1,26 +1,33 @@
 #include "elemento.h"
+#include "a_sbr_logger.h"
 
 int main()
 {
+    /*
     // Ejemplo de uso
     std::cout << "Comenzando Programa" << std::endl;
     Hecho *q = new Hecho("A", 0.8);
-    std::cout << "Se ha creado el Hecho A " << q->getNombre() << " FC=" << q->evaluar() << std::endl;
+    q->evaluar();
+    std::cout << "Se ha creado el Hecho " << q->getNombre() << " FC=" << q->evaluar() << std::endl;
 
     Hecho *w = new Hecho("B", 0.5);
-    std::cout << "Se ha creado el Hecho B " << w->getNombre() << " FC=" << w->evaluar()<< std::endl;
+    w->evaluar();
+    std::cout << "Se ha creado el Hecho " << w->getNombre() << " FC=" << w->evaluar()<< std::endl;
 
     HechoOR *  o = new HechoOR({q, w});
-    std::cout << "Se ha creado el HechoOR  " << o->getNombre() << " FC= "<< o->evaluar() << std::endl;
+    o->evaluar();
+    std::cout << "Se ha creado el HechoOR " << o->getNombre() << " FC= "<< o->evaluar() << std::endl;
 
     HechoAND * e = new HechoAND({q,w});
+    e->evaluar();
     std::cout << "Se ha creado el HechoAND " << e->getNombre() << " FC= "<< e->evaluar() << std::endl;
 
     Hecho * r = new Hecho("C");
-    std::cout << "Se ha creado el Hecho A " << q->getNombre() << std::endl;
+    std::cout << "Se ha creado el Hecho " << r->getNombre() << std::endl;
 
     Regla * regla = new Regla(0.5, e, r, "R1");
-std::cout << "Se ha creado la Regla " << regla -> getNombre() << " FC= " << regla->evaluar() <<std::endl;
+    regla->evaluar();
+    std::cout << "Se ha creado la Regla " << regla -> getNombre() << " FC= " << regla->evaluar() <<std::endl;
 
     // Liberar memoria
     Hecho *c = new Hecho("D");
@@ -31,7 +38,7 @@ std::cout << "Se ha creado la Regla " << regla -> getNombre() << " FC= " << regl
     c->imprimirReglas();
     c->evaluar();
     std::cout << "Valor de " << c->getNombre() << " " << c->evaluar() << std::endl;
-
+*/
     std::cout << "\n\n\tTest ejercicio de Sherlock" << std::endl;
 
     // Simulamos BC
@@ -52,9 +59,11 @@ std::cout << "Se ha creado la Regla " << regla -> getNombre() << " FC= " << regl
     lig->setFactorCerteza(1.0);
     s->setFactorCerteza(0.5);
 
+    SBRLogger::instancia()->addBH({liw, lig, s});
+
     double resultado = final->evaluar();
 
-    std::cout << "Objetivo " << resultado << std::endl;
+    std::cout << "Objetivo " << final->getNombre() << ", " <<  resultado << std::endl;
 
     return 0;
 }

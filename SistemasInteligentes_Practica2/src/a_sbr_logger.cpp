@@ -4,7 +4,7 @@
 
 SBRLogger::SBRLogger(int n_tabuladores = 0) : n_tabuladores(n_tabuladores) {}
 
-SBRLogger * SBRLogger::s_instancia=nullptr;
+SBRLogger *SBRLogger::s_instancia = nullptr;
 
 void SBRLogger::imprimirTabuladores()
 {
@@ -43,9 +43,10 @@ void SBRLogger::addBH(std::vector<Hecho *> elems)
     this->imprimirBH();
 }
 
-void SBRLogger::addCC(Regla *cc)
+void SBRLogger::addCC(Regla *cr)
 {
-    this->cc.push_back(cc);
+    this->cc.push_back(cr);
+    this->imprimirTabuladores();
     this->imprimirCC();
 }
 
@@ -53,6 +54,7 @@ void SBRLogger::addCC(std::vector<Regla *> elems)
 {
     for (const auto &elem : elems)
         this->cc.push_back(elem);
+    this->imprimirTabuladores();
     this->imprimirCC();
 }
 
@@ -64,11 +66,15 @@ void SBRLogger::eliminarMeta()
 
 void SBRLogger::eliminarCC()
 {
+    if (this->cc.empty())
+        return;
+
     this->n_tabuladores++;
     this->imprimirTabuladores();
     this->imprimirCC();
 
-    auto regla = this->cc.front();
+    auto regla = this->cc.back();
+    this->cc.erase(this->cc.end()-1);
     this->imprimirTabuladores();
     std::cout << "Regla = {" << regla->getNombre() << "}" << std::endl;
 
@@ -113,7 +119,7 @@ void SBRLogger::usoCaso3(Regla *regla)
               << ", " << regla->getConsecuencia()->getNombre()
               << ", FC =" << regla->getConsecuencia()->getFactorCerteza()
               << std::endl;
-    
+    this->n_tabuladores--;
 }
 
 void SBRLogger::imprimirNuevasMetas()
@@ -135,6 +141,7 @@ void SBRLogger::imprimirNuevasMetas()
 
 void SBRLogger::imprimirBH()
 {
+    this->imprimirTabuladores();
     std::cout << "BH = ";
     this->imprimirBHContenido();
     std::cout << std::endl;
@@ -145,7 +152,7 @@ void SBRLogger::imprimirBHContenido()
     std::cout << "{";
     for (size_t i = 0; i < this->bh.size(); ++i)
     {
-        std::cout << this->bh[i]->getNombre();
+        std::cout << this->bh[i]->getNombre() << ":" << this->bh[i]->getFactorCerteza();
 
         // Imprimir la coma solo si no es el último elemento
         if (i < this->bh.size() - 1)
@@ -182,9 +189,9 @@ void SBRLogger::reset(bool usarLogger, int n_tabuladores)
 
 SBRLogger *SBRLogger::instancia()
 {
-    if ( ! s_instancia )
-         s_instancia = new SBRLogger(0);
-      return s_instancia;
+    if (!s_instancia)
+        s_instancia = new SBRLogger(0);
+    return s_instancia;
 }
 
 SBRLogger::~SBRLogger()

@@ -15,8 +15,9 @@ public:
     Elemento(double factorCerteza = SIN_CALCULAR) : factorCerteza(factorCerteza){};
     // std::string getNombre();
     virtual double evaluar() = 0;
-    virtual std::string getNombre() const = 0;
+    virtual std::string getNombre() = 0;
     double getFactorCerteza() { return this->factorCerteza; };
+    virtual std::vector<std::string> annadirNuevasMetas() = 0;
     virtual ~Elemento() {} // Destructor virtual para la herencia
 };
 
@@ -27,11 +28,13 @@ class HechoAND : public Elemento
 {
 private:
     std::vector<Elemento *> hechos;
+    std::string nombre;
 
 public:
     HechoAND(const std::vector<Elemento *> &hechos);
     double evaluar();
-    std::string getNombre() const override;
+    std::string getNombre() override;
+    std::vector<std::string> annadirNuevasMetas() override;
     std::vector<Elemento *> getHechos();
     ~HechoAND() override;
 };
@@ -41,12 +44,14 @@ class HechoOR : public Elemento
 {
 private:
     std::vector<Elemento *> hechos;
+    std::string nombre;
 
 public:
     HechoOR(const std::vector<Elemento *> &hechos);
     double evaluar();
-    std::string getNombre() const override;
+    std::string getNombre() override;
     std::vector<Elemento *> getHechos();
+    std::vector<std::string> annadirNuevasMetas() override;
     ~HechoOR() override;
 };
 
@@ -58,10 +63,11 @@ private:
     std::string nombre;
 
 public:
-    std::string getNombre() const override;
+    std::string getNombre() override;
     Regla(double factorCerteza, Elemento *hecho, Hecho *consecuencia, std::string nombre);
     double evaluar();
     Hecho *getConsecuencia();
+    std::vector<std::string> annadirNuevasMetas() override;
     Elemento *getPrecondicion();
 };
 
@@ -78,9 +84,10 @@ public:
     Hecho(std::string nombre, double factorCerteza = SIN_CALCULAR);
     void setFactorCerteza(double factorCerteza);
     double evaluar();
-    std::string getNombre() const override;
+    std::string getNombre() override;
     void addRegla(Regla *nuevaRegla);
     void imprimirReglas();
+    std::vector<std::string> annadirNuevasMetas() override;
 };
 
 #endif // ELEMENTO_H
