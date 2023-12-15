@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
 
 struct bh_element
 {
@@ -19,6 +20,8 @@ class SBRLogger
     std::vector<Hecho *> bh;
     std::vector<Regla *> cc;
     int n_tabuladores;
+    std::ofstream * ficheroSalida;
+
     static SBRLogger *s_instancia;
 
     SBRLogger(int n_tabuladores);
@@ -30,8 +33,10 @@ public:
 
     void addMeta(Hecho *nuevaMeta);
     void addMeta(std::vector<Hecho *> metas);
+
     void addBH(Hecho *bh);
     void addBH(std::vector<Hecho *> elems);
+
     void addCC(Regla *cr);
     void addCC(std::vector<Regla *> elems);
 
@@ -48,6 +53,9 @@ public:
     void imprimirBH();
     void imprimirBHContenido();
     void imprimirCC();
+
+    void setFicheroSalida(std::string fichero);
+    std::ofstream * getFicheroSalida();
 
     void reset(bool usarLogger = true, int n_tabuladores = 0);
     static SBRLogger *instancia();

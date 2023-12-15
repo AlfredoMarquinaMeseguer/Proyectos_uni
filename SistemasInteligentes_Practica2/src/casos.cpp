@@ -33,7 +33,7 @@ double caso1(HechoAND *hechoAND)
             min = actual;
         }
     }
-    // TODO encontrar convención de poner nombre
+
     return min;
 }
 

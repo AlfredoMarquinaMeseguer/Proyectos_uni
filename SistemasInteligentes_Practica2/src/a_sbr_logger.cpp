@@ -219,6 +219,7 @@ void SBRLogger::imprimirCC()
 
 void SBRLogger::reset(bool usarLogger, int n_tabuladores)
 {
+    s_instancia = new SBRLogger(0);
 }
 
 SBRLogger *SBRLogger::instancia()
@@ -230,19 +231,46 @@ SBRLogger *SBRLogger::instancia()
 
 SBRLogger::~SBRLogger()
 {
+
     for (const auto &elem : nuevasMetas)
     {
         if (elem != nullptr)
             delete elem;
     }
+
     for (const auto &elem : bh)
     {
         if (elem != nullptr)
             delete elem;
     }
+
     for (const auto &elem : cc)
     {
         if (elem != nullptr)
             delete elem;
     }
+
+    if (ficheroSalida->is_open())
+    {
+        ficheroSalida->close();
+    }
+}
+
+void SBRLogger::setFicheroSalida(std::string fichero)
+{
+    if (!s_instancia)
+        s_instancia = new SBRLogger(0);
+
+    s_instancia->ficheroSalida = new std::ofstream(fichero);
+}
+
+std::ofstream *SBRLogger::getFicheroSalida()
+{
+    if (!s_instancia)
+        s_instancia = new SBRLogger(0);
+
+    if (s_instancia->ficheroSalida->is_open())
+        return ficheroSalida;
+
+    return nullptr;
 }

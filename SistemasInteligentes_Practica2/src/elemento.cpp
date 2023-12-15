@@ -202,14 +202,15 @@ void Hecho::calcularFactorCerteza()
                                          this->reglas[1],
                                          this);
     }
-    else
+    else // TODO: PONER el logger
     {
         SBRLogger::instancia()->addCC(reglas);
         double valor = reglas[0]->evaluar();
         for (long unsigned int i = 1; i < this->reglas.size(); i++)
         {
             valor = caso2(valor,
-                          reglas[i]->evaluar(), this->nombre);
+                          reglas[i]->evaluar(), 
+                          this->nombre);
         }
         this->setFactorCerteza(valor);
     }

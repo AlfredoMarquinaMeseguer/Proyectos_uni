@@ -1,9 +1,8 @@
-#include "elemento.h"
+/*#include "elemento.h"
 #include "a_sbr_logger.h"
 
 int main()
 {
-    /*
     // Ejemplo de uso
     std::cout << "Comenzando Programa" << std::endl;
     Hecho *q = new Hecho("A", 0.8);
@@ -38,7 +37,8 @@ int main()
     c->imprimirReglas();
     c->evaluar();
     std::cout << "Valor de " << c->getNombre() << " " << c->evaluar() << std::endl;
-*/
+    
+    
     std::cout << "\n\n\tTest ejercicio de Sherlock" << std::endl;
 
     // Simulamos BC
@@ -67,4 +67,4 @@ int main()
     std::cout << "Objetivo " << final->getNombre() << ", " <<  resultado << std::endl;
 
     return 0;
-}
+}*/
