@@ -27,6 +27,7 @@ void SBRLogger::addMeta(std::vector<Hecho *> metas)
 {
     for (const auto &meta : metas)
         this->nuevasMetas.push_back(meta);
+    this->imprimirTabuladores();
     this->imprimirNuevasMetas();
 }
 
@@ -58,10 +59,43 @@ void SBRLogger::addCC(std::vector<Regla *> elems)
     this->imprimirCC();
 }
 
-void SBRLogger::eliminarMeta()
+void SBRLogger::eliminarMeta(Hecho *meta)
 {
+
+    bool found = false;
+    auto it = this->nuevasMetas.rbegin();
+
+    while (!found && it != this->nuevasMetas.rend())
+    {
+        if ((*it)->getNombre().compare(meta->getNombre()) == 0)
+            found = true;
+        else
+            it++;
+    }
+    if (!found)
+    {
+        std::cout << "No se ha encontrado " << meta->getNombre() << std::endl;
+        return;
+    }
+
+    this->imprimirTabuladores();
+    std::cout << "Meta = " << (*it)->getNombre() << std::endl;
+
+    this->nuevasMetas.erase(std::next(it).base());
     this->imprimirTabuladores();
     this->imprimirNuevasMetas();
+
+    this->imprimirTabuladores();
+    std::cout << "Verificar ( " << meta->getNombre() << ", ";
+    this->imprimirBHContenido();
+    std::cout << " )";
+
+    if (meta->getFactorCerteza() != Hecho::SIN_CALCULAR)
+    {
+        std::cout << " -> " << meta->getFactorCerteza();
+    }
+
+    std::cout << std::endl;
 }
 
 void SBRLogger::eliminarCC()
@@ -74,7 +108,7 @@ void SBRLogger::eliminarCC()
     this->imprimirCC();
 
     auto regla = this->cc.back();
-    this->cc.erase(this->cc.end()-1);
+    this->cc.erase(this->cc.end() - 1);
     this->imprimirTabuladores();
     std::cout << "Regla = {" << regla->getNombre() << "}" << std::endl;
 

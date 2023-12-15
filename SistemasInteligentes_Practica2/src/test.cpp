@@ -61,6 +61,7 @@ int main()
 
     SBRLogger::instancia()->addBH({liw, lig, s});
 
+    SBRLogger::instancia()->addMeta(final);
     double resultado = final->evaluar();
 
     std::cout << "Objetivo " << final->getNombre() << ", " <<  resultado << std::endl;

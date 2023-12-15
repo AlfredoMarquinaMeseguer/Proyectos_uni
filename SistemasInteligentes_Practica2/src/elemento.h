@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 
+class Hecho;
 // Clase base para todas las reglas
 class Elemento
 {
@@ -17,11 +18,10 @@ public:
     virtual double evaluar() = 0;
     virtual std::string getNombre() = 0;
     double getFactorCerteza() { return this->factorCerteza; };
-    virtual std::vector<std::string> annadirNuevasMetas() = 0;
+    virtual std::vector<Hecho *> annadirNuevasMetas() = 0;
     virtual ~Elemento() {} // Destructor virtual para la herencia
 };
 
-class Hecho;
 
 // Elemento compuesta que combina varias reglas con operador AND
 class HechoAND : public Elemento
@@ -34,7 +34,7 @@ public:
     HechoAND(const std::vector<Elemento *> &hechos);
     double evaluar();
     std::string getNombre() override;
-    std::vector<std::string> annadirNuevasMetas() override;
+    std::vector<Hecho *> annadirNuevasMetas() override;
     std::vector<Elemento *> getHechos();
     ~HechoAND() override;
 };
@@ -51,7 +51,7 @@ public:
     double evaluar();
     std::string getNombre() override;
     std::vector<Elemento *> getHechos();
-    std::vector<std::string> annadirNuevasMetas() override;
+    std::vector<Hecho *> annadirNuevasMetas() override;
     ~HechoOR() override;
 };
 
@@ -67,7 +67,7 @@ public:
     Regla(double factorCerteza, Elemento *hecho, Hecho *consecuencia, std::string nombre);
     double evaluar();
     Hecho *getConsecuencia();
-    std::vector<std::string> annadirNuevasMetas() override;
+    std::vector<Hecho *> annadirNuevasMetas() override;
     Elemento *getPrecondicion();
 };
 
@@ -87,7 +87,7 @@ public:
     std::string getNombre() override;
     void addRegla(Regla *nuevaRegla);
     void imprimirReglas();
-    std::vector<std::string> annadirNuevasMetas() override;
+    std::vector<Hecho *> annadirNuevasMetas() override;
 };
 
 #endif // ELEMENTO_H

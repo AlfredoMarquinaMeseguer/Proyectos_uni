@@ -35,7 +35,7 @@ public:
     void addCC(Regla *cr);
     void addCC(std::vector<Regla *> elems);
 
-    void eliminarMeta();
+    void eliminarMeta(Hecho * meta);
     void eliminarCC();
     void aplicarRegla(Regla * regla);
     void aplicarRegla();

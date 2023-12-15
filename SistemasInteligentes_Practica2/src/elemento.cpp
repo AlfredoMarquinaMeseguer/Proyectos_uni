@@ -36,10 +36,10 @@ std::string HechoAND::getNombre()
     this->nombre = nombre;
     return nombre;
 }
-std::vector<std::string> HechoAND::annadirNuevasMetas() 
+std::vector<Hecho *> HechoAND::annadirNuevasMetas()
 {
-    std::vector<std::string> nuevasMetas = {};
-    std::vector<std::string> sublista;
+    std::vector<Hecho *> nuevasMetas = {};
+    std::vector<Hecho *> sublista;
     for (const auto &regla : this->hechos)
     {
         sublista = regla->annadirNuevasMetas();
@@ -99,10 +99,10 @@ std::vector<Elemento *> HechoOR::getHechos()
     return this->hechos;
 }
 
-std::vector<std::string> HechoOR::annadirNuevasMetas() 
+std::vector<Hecho *> HechoOR::annadirNuevasMetas()
 {
-    std::vector<std::string> nuevasMetas = {};
-    std::vector<std::string> sublista;
+    std::vector<Hecho *> nuevasMetas = {};
+    std::vector<Hecho *> sublista;
     for (const auto &regla : this->hechos)
     {
         sublista = regla->annadirNuevasMetas();
@@ -130,6 +130,7 @@ Regla::Regla(double factorCerteza, Elemento *hecho, Hecho *consecuencia, std::st
 double Regla::evaluar() // TODO: ponerlo con el logger correcto
 {
     SBRLogger::instancia()->aplicarRegla(this);
+    SBRLogger::instancia()->addMeta(this->hecho->annadirNuevasMetas());
     // Caso 3
     double a = caso3(this);
 
@@ -146,7 +147,7 @@ Hecho *Regla::getConsecuencia()
     return this->consecuencia;
 }
 
-std::vector<std::string> Regla::annadirNuevasMetas() 
+std::vector<Hecho *> Regla::annadirNuevasMetas()
 {
     return {};
 }
@@ -217,6 +218,7 @@ void Hecho::calcularFactorCerteza()
 
 double Hecho::evaluar()
 {
+    SBRLogger::instancia()->eliminarMeta(this);
     if (this->factorCerteza == this->SIN_CALCULAR)
     {
         this->calcularFactorCerteza();
@@ -230,9 +232,9 @@ std::string Hecho::getNombre()
     return this->nombre;
 }
 
-std::vector<std::string> Hecho::annadirNuevasMetas()
+std::vector<Hecho *> Hecho::annadirNuevasMetas()
 {
-    return {this->getNombre()};
+    return {this};
 }
 
 void Hecho::addRegla(Regla *nuevaRegla)
