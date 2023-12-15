@@ -3,14 +3,26 @@
 int main()
 {
     // Ejemplo de uso
-    Elemento *reglaCompuesta = new HechoAND({new Hecho("A", 0.8),
-                                             new HechoOR({new Hecho("B", 0.5),
-                                                          new Hecho("C", 0.7)})});
+    std::cout << "Comenzando Programa" << std::endl;
+    Hecho *q = new Hecho("A", 0.8);
+    std::cout << "Se ha creado el Hecho A " << q->getNombre() << " FC=" << q->evaluar() << std::endl;
 
-    std::cout << "La salida es " << reglaCompuesta->evaluar() << " Patata" << std::endl;
+    Hecho *w = new Hecho("B", 0.5);
+    std::cout << "Se ha creado el Hecho B " << w->getNombre() << " FC=" << w->evaluar()<< std::endl;
+
+    HechoOR *  o = new HechoOR({q, w});
+    std::cout << "Se ha creado el HechoOR  " << o->getNombre() << " FC= "<< o->evaluar() << std::endl;
+
+    HechoAND * e = new HechoAND({q,w});
+    std::cout << "Se ha creado el HechoAND " << e->getNombre() << " FC= "<< e->evaluar() << std::endl;
+
+    Hecho * r = new Hecho("C");
+    std::cout << "Se ha creado el Hecho A " << q->getNombre() << std::endl;
+
+    Regla * regla = new Regla(0.5, e, r, "R1");
+std::cout << "Se ha creado la Regla " << regla -> getNombre() << " FC= " << regla->evaluar() <<std::endl;
 
     // Liberar memoria
-    delete reglaCompuesta;
     Hecho *c = new Hecho("D");
     Regla *a = new Regla(0.8, new Hecho("A", 0.8), c, "R1");
     Regla *b = new Regla(0.8, new Hecho("A", -0.8), c, "R2");

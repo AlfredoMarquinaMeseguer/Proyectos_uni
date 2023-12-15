@@ -1,7 +1,8 @@
 #include "casos.h"
 #include "elemento.h"
+#include "a_sbr_logger.h"
 
-double caso2(double valor1, double valor2, std::string nombre, bool dentroRegla = false)
+double caso2(double valor1, double valor2, std::string nombre)
 {
     double sol;
 
@@ -17,16 +18,16 @@ double caso2(double valor1, double valor2, std::string nombre, bool dentroRegla 
     {
         sol = (valor1 + valor2) / (1.0 - std::min(std::abs(valor1), std::abs(valor2)));
     }
-
-    if (dentroRegla) std::cout << "\t";
+    // TODO meter en el logger
     std::cout << "Caso 2: " << nombre << ", " << sol << std::endl;
 
     return sol;
 }
 
-double caso1AND(const std::vector<Elemento *> &reglas, bool dentroRegla = false){
- double min = 1;
-    for (const auto &regla : reglas)
+double caso1(HechoAND *hechoAND)
+{
+    double min = 1;
+    for (const auto &regla : hechoAND->getHechos())
     {
         double actual = regla->evaluar();
         if (actual < min)
@@ -35,13 +36,14 @@ double caso1AND(const std::vector<Elemento *> &reglas, bool dentroRegla = false)
         }
     }
     // TODO encontrar convención de poner nombre
-    std::cout << "Caso 1: " << "hecho" << ", " << min << std::endl;
+    SBRLogger::instancia()->usoCaso1(hechoAND);
     return min;
 }
 
-double caso1OR(const std::vector<Elemento *> &reglas, bool dentroRegla = false){
- double max = -1;
-    for (const auto &regla : reglas)
+double caso1(HechoOR *hechoOR)
+{
+    double max = -1;
+    for (const auto &regla : hechoOR->getHechos())
     {
         double actual = regla->evaluar();
         if (actual > max)
@@ -49,5 +51,14 @@ double caso1OR(const std::vector<Elemento *> &reglas, bool dentroRegla = false){
             max = actual;
         }
     }
+    SBRLogger::instancia()->usoCaso1(hechoOR);
     return max;
+}
+
+double caso3(Regla *regla)
+{
+    double sol = regla->getFactorCerteza() * std::max(0.0, regla->getPrecondicion()->evaluar());
+    regla->getConsecuencia()->setFactorCerteza(sol);
+    SBRLogger::instancia()->usoCaso3(regla);
+    return sol;
 }
