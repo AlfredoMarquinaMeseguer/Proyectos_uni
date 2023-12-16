@@ -97,11 +97,12 @@ int main(int argc, char *argv[])
         return 1; // Exit with an error code
     }
 
-    std::vector<std::string> palabrasRegla;
+    std::vector<std::string> palabrasRegla, objetivos;
     std::string nombreRegla;
     std::string nombreHecho;
     std::vector<Elemento *> elementos;
     regla *nuevaR;
+    std::vector<Regla *> reglasAux;
     std::ifstream ficheroBC(argv[1]);
     std::ifstream ficheroBH(argv[2]);
 
@@ -229,7 +230,6 @@ int main(int argc, char *argv[])
     }
 
     std::cout << "\nHechos: " << std::endl;
-    std::vector<Regla *> reglasAux;
     for (auto hecho : hechos)
     {
         std::cout << "Hecho: " << hecho->getNombre() << "\n\tPrecondición: ";
@@ -257,6 +257,7 @@ int main(int argc, char *argv[])
 
     std::vector<std::string> palabrasBH;
     Hecho *hechoAux;
+    std::vector<Hecho *> bhInicial;
     for (int i = 0; i < n_reglas; i++)
     {
         std::getline(ficheroBH, line);
@@ -268,30 +269,83 @@ int main(int argc, char *argv[])
         if (hechoAux != nullptr)
         {
             hechoAux->setFactorCerteza(std::atof(palabrasBH[1].c_str()));
+            bhInicial.push_back(hechoAux);
         }
         else
         {
             std::cout << "Error hecho no encontrado " << std::endl;
         }
     }
+
     std::getline(ficheroBH, line); // Esta es la linea de objetivo y no sirve para nada
     std::getline(ficheroBH, line);
 
     std::cout << "Calculando objetivo" << std::endl;
-    line.erase(line.end() - 1);
-    hechoAux = contiene(line);
-
-    (*salida) << "Objetivo: " << line << std::endl
-              << std::endl;
-    if (hechoAux == nullptr)
+    objetivos = separarString(line);
+    if (objetivos.size() == 1)
     {
-        std::cout << "Error, hecho objetivo no encontrado " << std::endl;
+        if (*(objetivos[0].end() - 1) == '\n' || *(objetivos[0].end() - 1) == ',')
+            objetivos[0].erase(objetivos[0].end() - 1);
+
+        hechoAux = contiene(objetivos[0]);
+
+        (*salida) << "Objetivo: " << objetivos[0] << std::endl
+                  << std::endl;
+        SBRLogger::instancia()->addBH(bhInicial);
+        if (hechoAux == nullptr)
+        {
+            std::cout << "Error, hecho objetivo no encontrado " << std::endl;
+        }
+        else
+        {
+            SBRLogger::instancia()->addMeta(hechoAux);
+            hechoAux->evaluar();
+
+            (*salida) << "Objetivo " << hechoAux->getNombre() << ", " << hechoAux->getFactorCerteza() << "\n";
+        }
     }
     else
     {
-        SBRLogger::instancia()->addMeta(hechoAux);
-        hechoAux->evaluar();
+        Hecho *objetivoMax = new Hecho("Dummy", -1);
 
+        (*salida) << "Objetivo: ";
+        for (size_t i = 0; i < objetivos.size(); i++)
+        {
+            if (*(objetivos[i].end() - 1) == '\n' || *(objetivos[i].end() - 1) == ',')
+                objetivos[i].erase(objetivos[i].end() - 1);
+
+            (*salida) << objetivos[i];
+
+            if (i != objetivos.size() - 1)
+            {
+                (*salida) << ", ";
+            }
+        }
+        (*salida) << std::endl
+                  << std::endl;
+        SBRLogger::instancia()->addBH(bhInicial);
+
+        for (auto objetivo : objetivos)
+        {
+
+            hechoAux = contiene(objetivo);
+
+            if (hechoAux == nullptr)
+            {
+                std::cout << "Error, hecho objetivo no encontrado " << std::endl;
+            }
+            else
+            {
+                SBRLogger::instancia()->addMeta(hechoAux);
+                hechoAux->evaluar();
+
+                if (hechoAux->getFactorCerteza() > objetivoMax->getFactorCerteza())
+                {
+                    objetivoMax = hechoAux;
+                }
+                (*salida) << std::endl;
+            }
+        }
         (*salida) << "Objetivo " << hechoAux->getNombre() << ", " << hechoAux->getFactorCerteza() << "\n";
     }
     // Read from the second input file and write to the output file
@@ -301,7 +355,7 @@ int main(int argc, char *argv[])
     ficheroBH.close();
     delete SBRLogger::instancia();
 
-    std::cout << "Programa ha ejecutado sin explotar. La salida \"log\" se encuentra en fichero" << argv[3] << std::endl
+    std::cout << "Programa ha ejecutado sin explotar. La salida \"log\" se encuentra en fichero " << argv[3] << std::endl
               << "Pulsa Enter para terminar el programa.";
 
     // No hago los deleters porque se invocan los deletes de las clases automágicamente cuando salgo de alcance
