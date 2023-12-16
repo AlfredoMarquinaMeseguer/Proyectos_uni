@@ -1,66 +1,310 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include "elemento.h"
 #include "casos.h"
 #include "a_sbr_logger.h"
+
+#define REGLAY 0 // Esta macro nos sirve para expresar que una regla contiene el operador y
+#define REGLA0 1 // Esta macro nos sirve para expresar que una regla contiene el operador o
+#define REGLAC 2
+struct regla
+{                      // Estructura de una regla
+    double fc;         // Factor de certeza de la regla
+    int tipo = REGLAC; // Por defecto el tipo de una regla es REGLAC
+    std::string consecuente, id;
+    std::vector<std::string> antecedentes; // Lista de antecedentes de la regla
+};
+std::string extraerNombre(std::string cadena)
+{
+    std::string nombre;
+    auto it = cadena.begin();
+    while (it != cadena.end() && *it != '.')
+    {
+        // Tiene el or para que funcione en linux y windows
+        if (*it == '/' || *it == '\\')
+            nombre.clear();
+        else
+            nombre += *it;
+        it++;
+    }
+    return nombre;
+}
+
+std::vector<std::string> separarString(const std::string &input)
+{
+    std::vector<std::string> result;
+    std::istringstream iss(input);
+
+    // Iterate through each word in the string
+    do
+    {
+        std::string word;
+        iss >> word;
+        if (!word.empty())
+        {
+            result.push_back(word);
+        }
+    } while (iss);
+
+    return result;
+}
+std::vector<Hecho *> hechos;
+Hecho *contiene(std::string nombre, bool annadir = true)
+{
+    Hecho *hecho = nullptr;
+    auto it = hechos.begin();
+
+    while (it != hechos.end() && hecho == nullptr)
+    {
+        if ((*it)->getNombre() == nombre)
+        {
+            hecho = *it;
+        }
+        it++;
+    }
+    if (hecho == nullptr && annadir)
+    {
+        hechos.push_back(new Hecho(nombre));
+        return hechos.back();
+    }
+    return hecho;
+}
+
+Regla *contiene(std::vector<Regla *> reglas, std::string nombre)
+{
+    Regla *regla = nullptr;
+    auto it = reglas.begin();
+
+    while (it != reglas.end() && regla == nullptr)
+    {
+        if ((*it)->getNombre() == nombre)
+        {
+            regla = *it;
+        }
+        it++;
+    }
+    return regla;
+}
 
 int main(int argc, char *argv[])
 {
     // Check if the correct number of command-line arguments is provided
     if (argc != 4)
     {
-        std::cerr << "Usage: " << argv[0] << " <input_file1> <input_file2> <output_file>" << std::endl;
+        std::cerr << "Uso: " << argv[0] << " <entrada_BC> <entrada_BH> <salida>" << std::endl;
         return 1; // Exit with an error code
     }
 
-    // Open the input files
+    std::vector<std::string> palabrasRegla;
+    std::string nombreRegla;
+    std::string nombreHecho;
+    std::vector<Elemento *> elementos;
+    regla *nuevaR;
     std::ifstream ficheroBC(argv[1]);
     std::ifstream ficheroBH(argv[2]);
 
-    // Check if input files are opened successfully
     if (!ficheroBC.is_open() || !ficheroBH.is_open())
     {
-        std::cerr << "Error opening input files." << std::endl;
-        return 1; // Exit with an error code
+        std::cerr << "Error abriendo ficheros de entrada." << std::endl;
+        return 1;
     }
 
-    // Open the output file
     SBRLogger::instancia()->setFicheroSalida(argv[3]);
     std::ofstream *salida = SBRLogger::instancia()->getFicheroSalida();
-    // Check if the output file is opened successfully
     if (!(*salida).is_open())
     {
-        std::cerr << "Error opening output file." << std::endl;
-        return 1; // Exit with an error code
+        std::cerr << "Error abriendo ficheor salida." << std::endl;
+        return 1;
     }
+    std::cout << "Comenzando parseo..." << std::endl;
 
-    // Read from the first input file and write to the output file
+    std::string nombreBC = extraerNombre(argv[1]);
+    (*salida) << "Nombre de la Base de Conocimientos: " << nombreBC << std::endl; // TODO: La manera correcta de imprimir en ficheor salida
+
+    std::string nombreBH = extraerNombre(argv[2]);
+    (*salida) << "Nombre de la Base de Hechos: " << nombreBH << std::endl;
+
     std::string line;
     std::vector<Regla *> reglas;
-    std::vector<Elemento *> hechos;
 
     int n_reglas;
     std::getline(ficheroBC, line);
     n_reglas = std::stoi(line);
-
-    while (std::getline(ficheroBC, line))
+    std::cout << "Parseando Base de conocimientos número de reglas a parsear " << n_reglas << std::endl;
+    for (int i = 0; i < n_reglas; i++)
     {
-        (*salida) << line << std::endl;
+        std::getline(ficheroBC, line);
+        std::cout << "Parseando una regla" << std::endl;
+        palabrasRegla = separarString(line);
+
+        auto it2 = palabrasRegla.begin();
+        std::string c;
+        std::string aux;
+        nuevaR = new regla();
+        c = *it2; // Extraemos el antecedente
+        std::cout << "Palabra actual: " << c << std::endl;
+        c.erase(c.length() - 1); // Borramos los dos puntos
+        nuevaR->id = c;          // Establecemos el id de la regla
+        *it2++;
+        while (it2 != palabrasRegla.end())
+        {
+            c = *it2;
+            it2++;
+            std::cout << "Palabra actual: " << c << std::endl;
+            if (c == "Si" || c == "o" || c == "y")
+            {
+
+                // Extablecemos el tipo de la regla
+                if (c == "o")
+                    nuevaR->tipo = REGLA0;
+                else if (c == "y")
+                    nuevaR->tipo = REGLAY;
+
+                c = *it2; // Extraemos el antecedente
+                it2++;
+                std::cout << "Palabra actual: " << c << std::endl;
+                nuevaR->antecedentes.push_back(c); // A�adimos el antecedente en la lista de antecedentes de la regla
+            }
+            else if (c == "Entonces")
+            {
+
+                c = *it2; // Extraemos el antecedente
+                it2++;
+
+                std::cout << "Palabra actual: " << c << std::endl;
+
+                c.erase(c.length() - 1); // Borramos la coma
+                nuevaR->consecuente = c; // Asignamos el consecuente a la regla
+
+                c = *it2; // Extraemos el antecedente
+                it2++;
+                std::cout << "Palabra actual: " << c << std::endl;
+                aux.clear();
+                aux = c;
+                aux.erase(0, 3); // Nos quedamos con el factor de certeza de la regla
+
+                nuevaR->fc = std::atof(aux.c_str());
+
+                Elemento *antecedente;
+                if (nuevaR->tipo == REGLAY)
+                {
+                    std::vector<Elemento *> precondiciones;
+                    for (auto p : nuevaR->antecedentes)
+                    {
+                        precondiciones.push_back(contiene(p));
+                    }
+                    antecedente = new HechoAND(precondiciones);
+                }
+                else if (nuevaR->tipo == REGLA0)
+                {
+                    std::vector<Elemento *> precondiciones;
+                    for (auto p : nuevaR->antecedentes)
+                    {
+                        precondiciones.push_back(contiene(p));
+                    }
+                    antecedente = new HechoAND(precondiciones);
+                }
+                else
+                {
+                    antecedente = contiene(nuevaR->antecedentes.front());
+                }
+                reglas.push_back(new Regla(nuevaR->fc,
+                                           antecedente,
+                                           contiene(nuevaR->consecuente),
+                                           nuevaR->id)); // A�adimos la nueva regla a la base de conocimientos
+
+                nuevaR = new regla; // Reservamos memoria para una nueva regla
+            }
+        }
+        std::cout << line << std::endl
+                  << std::endl;
     }
 
+    std::cout << "Reglas: " << std::endl;
+    for (auto reglaAux : reglas)
+    {
+        std::cout << "Esta regla es " << reglaAux->getNombre() << "\n\tprecondiciones: " << reglaAux->getPrecondicion()->getNombre() << "\n\tpostcondicion: " << reglaAux->getConsecuencia()->getNombre() << std::endl;
+    }
+
+    std::cout << "\nHechos: " << std::endl;
+    std::vector<Regla *> reglasAux;
+    for (auto hecho : hechos)
+    {
+        std::cout << "Hecho: " << hecho->getNombre() << "\n\tPrecondición: ";
+        reglasAux = hecho->getReglas();
+        if (reglasAux.empty())
+        {
+            std::cout << " vacio.";
+        }
+        for (size_t i = 0; i < reglasAux.size(); ++i)
+        {
+            std::cout << reglasAux[i]->getNombre();
+
+            // Imprimir la coma solo si no es el último elemento
+            if (i < reglasAux.size() - 1)
+            {
+                std::cout << ", ";
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    std::getline(ficheroBH, line);
+    n_reglas = std::stoi(line);
+    std::cout << n_reglas << std::endl;
+
+    std::vector<std::string> palabrasBH;
+    Hecho *hechoAux;
+    for (int i = 0; i < n_reglas; i++)
+    {
+        std::getline(ficheroBH, line);
+        palabrasBH = separarString(line);
+        palabrasBH[0].erase(palabrasBH[0].end() - 1);
+        palabrasBH[1].erase(0, 3);
+        std::cout << "Parseando una FC de " << palabrasBH[0] << " -> " << palabrasBH[1] << std::endl;
+        hechoAux = contiene(palabrasBH[0], false);
+        if (hechoAux != nullptr)
+        {
+            hechoAux->setFactorCerteza(std::atof(palabrasBH[1].c_str()));
+        }
+        else
+        {
+            std::cout << "Error hecho no encontrado " << std::endl;
+        }
+    }
+    std::getline(ficheroBH, line); // Esta es la linea de objetivo y no sirve para nada
+    std::getline(ficheroBH, line);
+
+    std::cout << "Calculando objetivo" << std::endl;
+    line.erase(line.end() - 1);
+    hechoAux = contiene(line);
+
+    (*salida) << "Objetivo: " << line << std::endl
+              << std::endl;
+    if (hechoAux == nullptr)
+    {
+        std::cout << "Error, hecho objetivo no encontrado " << std::endl;
+    }
+    else
+    {
+        SBRLogger::instancia()->addMeta(hechoAux);
+        hechoAux->evaluar();
+
+        (*salida) << "Objetivo " << hechoAux->getNombre() << ", " << hechoAux->getFactorCerteza() << "\n";
+    }
     // Read from the second input file and write to the output file
-    while (std::getline(ficheroBH, line))
-    {
-        (*salida) << line << std::endl;
-    }
 
     // Close the file streams
     ficheroBC.close();
     ficheroBH.close();
     delete SBRLogger::instancia();
 
-    std::cout << "Files successfully merged. Check the content in " << argv[3] << std::endl;
+    std::cout << "Programa ha ejecutado sin explotar. La salida \"log\" se encuentra en fichero" << argv[3] << std::endl
+              << "Pulsa Enter para terminar el programa.";
 
+    // No hago los deleters porque se invocan los deletes de las clases automágicamente cuando salgo de alcance
+    getchar();
     return 0; // Exit successfully
 }

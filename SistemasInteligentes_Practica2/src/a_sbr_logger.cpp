@@ -8,8 +8,9 @@ SBRLogger *SBRLogger::s_instancia = nullptr;
 
 void SBRLogger::imprimirTabuladores()
 {
+    auto salida = s_instancia->ficheroSalida;
     for (int i = 0; i < this->n_tabuladores; i++)
-        std::cout << "\t";
+        (*salida) << "\t";
 }
 
 int SBRLogger::getNTabuladores()
@@ -61,7 +62,7 @@ void SBRLogger::addCC(std::vector<Regla *> elems)
 
 void SBRLogger::eliminarMeta(Hecho *meta)
 {
-
+    auto salida = s_instancia->ficheroSalida;
     bool found = false;
     auto it = this->nuevasMetas.rbegin();
 
@@ -74,28 +75,28 @@ void SBRLogger::eliminarMeta(Hecho *meta)
     }
     if (!found)
     {
-        std::cout << "No se ha encontrado " << meta->getNombre() << std::endl;
+        (*salida) << "No se ha encontrado " << meta->getNombre() << std::endl;
         return;
     }
 
     this->imprimirTabuladores();
-    std::cout << "Meta = " << (*it)->getNombre() << std::endl;
+    (*salida) << "Meta = " << (*it)->getNombre() << std::endl;
 
     this->nuevasMetas.erase(std::next(it).base());
     this->imprimirTabuladores();
     this->imprimirNuevasMetas();
 
     this->imprimirTabuladores();
-    std::cout << "Verificar ( " << meta->getNombre() << ", ";
+    (*salida) << "Verificar ( " << meta->getNombre() << ", ";
     this->imprimirBHContenido();
-    std::cout << " )";
+    (*salida) << " )";
 
     if (meta->getFactorCerteza() != Hecho::SIN_CALCULAR)
     {
-        std::cout << " -> " << meta->getFactorCerteza();
+        (*salida) << " -> " << meta->getFactorCerteza();
     }
 
-    std::cout << std::endl;
+    (*salida) << std::endl;
 }
 
 void SBRLogger::eliminarCC()
@@ -103,6 +104,7 @@ void SBRLogger::eliminarCC()
     if (this->cc.empty())
         return;
 
+    auto salida = s_instancia->ficheroSalida;
     this->n_tabuladores++;
     this->imprimirTabuladores();
     this->imprimirCC();
@@ -110,46 +112,51 @@ void SBRLogger::eliminarCC()
     auto regla = this->cc.back();
     this->cc.erase(this->cc.end() - 1);
     this->imprimirTabuladores();
-    std::cout << "Regla = {" << regla->getNombre() << "}" << std::endl;
+    (*salida) << "Regla = {" << regla->getNombre() << "}" << std::endl;
 
     this->imprimirTabuladores();
-    std::cout << "Eliminar " << regla->getNombre() << " -> ";
+    (*salida) << "Eliminar " << regla->getNombre() << " -> ";
     this->imprimirCC();
 }
 
 void SBRLogger::aplicarRegla(Regla *regla)
 {
+    auto salida = s_instancia->ficheroSalida;
     this->imprimirTabuladores();
-    std::cout << "Aplicar regla " << regla->getNombre() << std::endl;
+    (*salida) << "Aplicar regla " << regla->getNombre() << std::endl;
 
     this->eliminarCC();
 }
 
 void SBRLogger::aplicarRegla()
 {
+    auto salida = s_instancia->ficheroSalida;
     this->imprimirTabuladores();
-    std::cout << "Aplicar regla " << this->cc.front()->getNombre() << std::endl;
+    (*salida) << "Aplicar regla " << this->cc.front()->getNombre() << std::endl;
 
     this->eliminarCC();
 }
 void SBRLogger::usoCaso1(Elemento *hechoCompuesto)
 {
+    auto salida = s_instancia->ficheroSalida;
     this->imprimirTabuladores();
-    std::cout << "Caso 1: " << hechoCompuesto->getNombre() << ", " << hechoCompuesto->getFactorCerteza() << std::endl;
+    (*salida) << "Caso 1: " << hechoCompuesto->getNombre() << ", " << hechoCompuesto->getFactorCerteza() << std::endl;
 }
 
 void SBRLogger::usoCaso2(Regla *antecedente1, Regla *antecedente2, Hecho *consecuencia)
 {
+    auto salida = s_instancia->ficheroSalida;
     this->imprimirTabuladores();
-    std::cout << "Caso 2: FC(" << consecuencia->getNombre() << ", " << antecedente1->getNombre()
+    (*salida) << "Caso 2: FC(" << consecuencia->getNombre() << ", " << antecedente1->getNombre()
               << " y " << antecedente2->getNombre() << "), " << consecuencia->getFactorCerteza()
               << std::endl;
 }
 
 void SBRLogger::usoCaso3(Regla *regla)
 {
+    auto salida = s_instancia->ficheroSalida;
     this->imprimirTabuladores();
-    std::cout << "Caso 3: " << regla->getPrecondicion()->getNombre()
+    (*salida) << "Caso 3: " << regla->getPrecondicion()->getNombre()
               << ", " << regla->getConsecuencia()->getNombre()
               << ", FC =" << regla->getConsecuencia()->getFactorCerteza()
               << std::endl;
@@ -158,63 +165,67 @@ void SBRLogger::usoCaso3(Regla *regla)
 
 void SBRLogger::imprimirNuevasMetas()
 {
-    std::cout << "NuevasMetas = {";
+    auto salida = s_instancia->ficheroSalida;
+    (*salida) << "NuevasMetas = {";
     for (size_t i = 0; i < this->nuevasMetas.size(); ++i)
     {
-        std::cout << this->nuevasMetas[i]->getNombre();
+        (*salida) << this->nuevasMetas[i]->getNombre();
 
         // Imprimir la coma solo si no es el último elemento
         if (i < this->nuevasMetas.size() - 1)
         {
-            std::cout << ", ";
+            (*salida) << ", ";
         }
     }
     // Salto de línea al final
-    std::cout << "}" << std::endl;
+    (*salida) << "}" << std::endl;
 }
 
 void SBRLogger::imprimirBH()
 {
+    auto salida = s_instancia->ficheroSalida;
     this->imprimirTabuladores();
-    std::cout << "BH = ";
+    (*salida) << "BH = ";
     this->imprimirBHContenido();
-    std::cout << std::endl;
+    (*salida) << std::endl;
 }
 
 void SBRLogger::imprimirBHContenido()
 {
-    std::cout << "{";
+    auto salida = s_instancia->ficheroSalida;
+    (*salida) << "{";
     for (size_t i = 0; i < this->bh.size(); ++i)
     {
-        std::cout << this->bh[i]->getNombre() << ":" << this->bh[i]->getFactorCerteza();
+        (*salida) << this->bh[i]->getNombre() << ":" << this->bh[i]->getFactorCerteza();
 
         // Imprimir la coma solo si no es el último elemento
         if (i < this->bh.size() - 1)
         {
-            std::cout << ", ";
+            (*salida) << ", ";
         }
     }
 
     // Salto de línea al final
-    std::cout << "}";
+    (*salida) << "}";
 }
 
 void SBRLogger::imprimirCC()
 {
-    std::cout << "CC = {";
+    auto salida = s_instancia->ficheroSalida;
+    (*salida) << "CC = {";
     for (size_t i = 0; i < this->cc.size(); ++i)
     {
-        std::cout << this->cc[i]->getNombre();
+        (*salida) << this->cc[i]->getNombre();
 
         // Imprimir la coma solo si no es el último elemento
         if (i < this->cc.size() - 1)
         {
-            std::cout << ", ";
+            (*salida) << ", ";
         }
     }
 
     // Salto de línea al final
-    std::cout << "}" << std::endl;
+    (*salida) << "}" << std::endl;
 }
 
 void SBRLogger::reset(bool usarLogger, int n_tabuladores)

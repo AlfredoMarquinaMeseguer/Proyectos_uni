@@ -182,7 +182,8 @@ void Hecho::calcularFactorCerteza()
 {
     if (this->reglas.empty())
     {
-        std::cout << "Error en Hecho evaluar/calcularFactorCerteza. Ni factor de certeza ni reglas." << std::endl;
+        std::cout << "Error en Hecho "
+                  << "evaluar/calcularFactorCerteza. Ni factor de certeza ni reglas." << this->getNombre() << std::endl;
         this->setFactorCerteza(0);
     }
     else if (this->reglas.size() == 1)
@@ -209,7 +210,7 @@ void Hecho::calcularFactorCerteza()
         for (long unsigned int i = 1; i < this->reglas.size(); i++)
         {
             valor = caso2(valor,
-                          reglas[i]->evaluar(), 
+                          reglas[i]->evaluar(),
                           this->nombre);
         }
         this->setFactorCerteza(valor);
@@ -243,12 +244,7 @@ void Hecho::addRegla(Regla *nuevaRegla)
     this->reglas.push_back(nuevaRegla);
 }
 
-void Hecho::imprimirReglas()
+std::vector<Regla *> Hecho::getReglas()
 {
-    int i = 0;
-    for (const auto &regla : reglas)
-    {
-        i++;
-        std::cout << i << " " << regla->evaluar() << std::endl;
-    }
+    return this->reglas;
 }

@@ -86,7 +86,7 @@ public:
     double evaluar();
     std::string getNombre() override;
     void addRegla(Regla *nuevaRegla);
-    void imprimirReglas();
+    std::vector<Regla *> getReglas();
     std::vector<Hecho *> annadirNuevasMetas() override;
 };
 
