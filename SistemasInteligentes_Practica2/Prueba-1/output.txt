@@ -1,59 +1,72 @@
-Nombre de la Base de Conocimientos: BC-1
-Nombre de la Base de Hechos: BH-1
-Objetivo: h1
+interfaz Elemento {  real verificar(); }
 
-NuevasMetas = {h1}
-Meta = h1
-NuevasMetas = {}
-Verificar ( h1, {} )
-CC = {R1, R2}
-Aplicar regla R2
-	CC = {R1, R2}
-	Regla = {R2}
-	Eliminar R2 -> CC = {R1}
-	NuevasMetas = {h4}
-	Meta = h4
-	NuevasMetas = {}
-	Verificar ( h4, {} ) -> 0.6
-	Caso 3: h4, h1, FC =0.6
-Aplicar regla R1
-	CC = {R1}
-	Regla = {R1}
-	Eliminar R1 -> CC = {}
-	NuevasMetas = {h2, h3}
-	Meta = h2
-	NuevasMetas = {h3}
-	Verificar ( h2, {} ) -> 0.6
-	Meta = h3
-	NuevasMetas = {}
-	Verificar ( h3, {} )
-	CC = {R3, R4}
-	Aplicar regla R4
-		CC = {R3, R4}
-		Regla = {R4}
-		Eliminar R4 -> CC = {R3}
-		NuevasMetas = {h7}
-		Meta = h7
-		NuevasMetas = {}
-		Verificar ( h7, {} ) -> 0.5
-		Caso 3: h7, h3, FC =-0.25
-	Aplicar regla R3
-		CC = {R3}
-		Regla = {R3}
-		Eliminar R3 -> CC = {}
-		NuevasMetas = {h5, h6}
-		Meta = h5
-		NuevasMetas = {h6}
-		Verificar ( h5, {} ) -> 0.3
-		Meta = h6
-		NuevasMetas = {}
-		Verificar ( h6, {} ) -> 0.9
-		Caso 1: h5 y h6, 0.3
-		Caso 3: h5 y h6, h3, FC =0.21
-	Caso 2: FC(h3, R3 y R4), -0.0506329
-	BH = {h3:-0.0506329}
-	Caso 1: h2 y h3, -0.0506329
-	Caso 3: h2 y h3, h1, FC =0
-Caso 2: FC(h1, R1 y R2), 0.6
-BH = {h3:-0.0506329, h1:0.6}
-Objetivo h1, 0.6
+constante real SIN_CALCULAR = // Cualquier valor que no utilicemos
+
+clase Hecho impl Elemento {  
+  	lista<Regla> antecedentes
+  	real factorCerteza
+  	cadena nombre
+  	// Constructor 
+	real verificar(){
+		si factorCerteza == SIN_CALCULAR{
+			//Utilizo iteradores para que sea más conciso
+			factorCerteza = caso2(antecedentes.itr().map(t-> t.evaluar()).collect())
+		}
+   		return factorCerteza;  
+  	}
+}
+clase HechoAND impl Elemento{
+  lista<T impl Elemento> antecedentes
+
+  	real verificar(){ // Caso 1
+		return antecedente.itr().map(m -> m.evaluar()).max();
+  	}
+}
+clase HechoOR impl Elemento{
+	lista<T impl Elemento> antecedentes
+
+	real verificar(){// Caso 1
+		return antecedente.itr().map(m -> m.evaluar()).min();
+	}
+}
+clase Regla impl Elemento{
+	<T impl Elemento> antecedente
+	real factorCerteza
+	cadena nombre
+
+	real verificar() { // Caso 3
+		return factorCerteza * max(0, antecedente.verificar())
+	}
+}
+
+
+real caso2(list<real> antecedentes){
+    si antecedentes.vacia()
+    {
+        imprimir("Error, comportamiento incierto en caso2")
+        return 0
+    }
+
+    si antecedentes.longitud() == 1 :
+        return  antecedentes[0]
+
+    si antecedentes.longitud() == 2 :
+        return  caso2Simple(antecedentes[0], antecedentes[1])
+    
+    double valor = reglas[0].verificar();
+	para (entero i = 1; i < antecedentes.tamanno(); ++i)
+	{
+		valor = caso2Simple(valor,reglas[i].verificar())
+	}
+	return valor
+}
+
+real caso2Simple(double valor1, double valor2){
+    si (valor1 >= 0 && valor2 >= 0)
+        return valor1 + valor2 * (1 - valor1)
+
+    si (valor1 <= 0 && valor2 <= 0)
+        return valor1 + valor2 * (1 + valor1)
+	
+	return (valor1 + valor2) / (1.0 - min(absoluto(valor1), absoluto(valor2)))
+}

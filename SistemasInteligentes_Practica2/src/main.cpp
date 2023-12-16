@@ -6,8 +6,8 @@
 #include "casos.h"
 #include "a_sbr_logger.h"
 
-#define REGLAY 0 // Esta macro nos sirve para expresar que una regla contiene el operador y
-#define REGLA0 1 // Esta macro nos sirve para expresar que una regla contiene el operador o
+#define REGLAY 0
+#define REGLA0 1
 #define REGLAC 2
 struct regla
 {                      // Estructura de una regla
@@ -16,6 +16,8 @@ struct regla
     std::string consecuente, id;
     std::vector<std::string> antecedentes; // Lista de antecedentes de la regla
 };
+std::vector<Hecho *> hechos;
+
 std::string extraerNombre(std::string cadena)
 {
     std::string nombre;
@@ -50,7 +52,7 @@ std::vector<std::string> separarString(const std::string &input)
 
     return result;
 }
-std::vector<Hecho *> hechos;
+
 Hecho *contiene(std::string nombre, bool annadir = true)
 {
     Hecho *hecho = nullptr;
@@ -70,22 +72,6 @@ Hecho *contiene(std::string nombre, bool annadir = true)
         return hechos.back();
     }
     return hecho;
-}
-
-Regla *contiene(std::vector<Regla *> reglas, std::string nombre)
-{
-    Regla *regla = nullptr;
-    auto it = reglas.begin();
-
-    while (it != reglas.end() && regla == nullptr)
-    {
-        if ((*it)->getNombre() == nombre)
-        {
-            regla = *it;
-        }
-        it++;
-    }
-    return regla;
 }
 
 int main(int argc, char *argv[])
@@ -145,10 +131,10 @@ int main(int argc, char *argv[])
         std::string aux;
         nuevaR = new regla();
         c = *it2; // Extraemos el antecedente
+        *it2++;
         std::cout << "Palabra actual: " << c << std::endl;
         c.erase(c.length() - 1); // Borramos los dos puntos
         nuevaR->id = c;          // Establecemos el id de la regla
-        *it2++;
         while (it2 != palabrasRegla.end())
         {
             c = *it2;
@@ -157,13 +143,12 @@ int main(int argc, char *argv[])
             if (c == "Si" || c == "o" || c == "y")
             {
 
-                // Extablecemos el tipo de la regla
                 if (c == "o")
                     nuevaR->tipo = REGLA0;
                 else if (c == "y")
                     nuevaR->tipo = REGLAY;
 
-                c = *it2; // Extraemos el antecedente
+                c = *it2;
                 it2++;
                 std::cout << "Palabra actual: " << c << std::endl;
                 nuevaR->antecedentes.push_back(c); // A�adimos el antecedente en la lista de antecedentes de la regla
@@ -171,20 +156,20 @@ int main(int argc, char *argv[])
             else if (c == "Entonces")
             {
 
-                c = *it2; // Extraemos el antecedente
+                c = *it2;
                 it2++;
 
                 std::cout << "Palabra actual: " << c << std::endl;
 
-                c.erase(c.length() - 1); // Borramos la coma
-                nuevaR->consecuente = c; // Asignamos el consecuente a la regla
+                c.erase(c.length() - 1);
+                nuevaR->consecuente = c;
 
-                c = *it2; // Extraemos el antecedente
+                c = *it2;
                 it2++;
                 std::cout << "Palabra actual: " << c << std::endl;
                 aux.clear();
                 aux = c;
-                aux.erase(0, 3); // Nos quedamos con el factor de certeza de la regla
+                aux.erase(0, 3);
 
                 nuevaR->fc = std::atof(aux.c_str());
 
@@ -214,9 +199,9 @@ int main(int argc, char *argv[])
                 reglas.push_back(new Regla(nuevaR->fc,
                                            antecedente,
                                            contiene(nuevaR->consecuente),
-                                           nuevaR->id)); // A�adimos la nueva regla a la base de conocimientos
+                                           nuevaR->id));
 
-                nuevaR = new regla; // Reservamos memoria para una nueva regla
+                nuevaR = new regla;
             }
         }
         std::cout << line << std::endl
@@ -351,9 +336,7 @@ int main(int argc, char *argv[])
                   << "Objetivo " << hechoAux->getNombre() << ", "
                   << hechoAux->getFactorCerteza() << "\n";
     }
-    // Read from the second input file and write to the output file
 
-    // Close the file streams
     ficheroBC.close();
     ficheroBH.close();
     delete SBRLogger::instancia();
@@ -363,5 +346,5 @@ int main(int argc, char *argv[])
 
     // No hago los deleters porque se invocan los deletes de las clases automágicamente cuando salgo de alcance
     getchar();
-    return 0; // Exit successfully
+    return 0; 
 }
