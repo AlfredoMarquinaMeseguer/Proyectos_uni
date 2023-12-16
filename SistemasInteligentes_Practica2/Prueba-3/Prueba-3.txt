@@ -1,0 +1,91 @@
+Nombre de la Base de Conocimientos: BC-3
+Nombre de la Base de Hechos: BH-3
+Objetivo: causante
+
+BH = {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5}
+NuevasMetas = {causante}
+Meta = causante
+NuevasMetas = {}
+Verificar ( causante, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5} )
+CC = {R5, R6, R7}
+Aplicar regla R5
+	CC = {R5, R6, R7}
+	Regla = {R7}
+	Eliminar R7 -> CC = {R5, R6}
+	NuevasMetas = {experimentado, noSolo}
+	Meta = experimentado
+	NuevasMetas = {noSolo}
+	Verificar ( experimentado, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5} )
+	CC = {R5, R6, R1, R2}
+	Aplicar regla R2
+		CC = {R5, R6, R1, R2}
+		Regla = {R2}
+		Eliminar R2 -> CC = {R5, R6, R1}
+		NuevasMetas = {noSolo, antiguedadmas3}
+		Meta = antiguedadmas3
+		NuevasMetas = {noSolo}
+		Verificar ( antiguedadmas3, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5} ) -> -1
+		Caso 3: antiguedadmas3, experimentado, FC =0
+	Aplicar regla R1
+		CC = {R5, R6, R1}
+		Regla = {R1}
+		Eliminar R1 -> CC = {R5, R6}
+		NuevasMetas = {noSolo, antiguedad23}
+		Meta = antiguedad23
+		NuevasMetas = {noSolo}
+		Verificar ( antiguedad23, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5} ) -> 1
+		Caso 3: antiguedad23, experimentado, FC =0.5
+	Caso 2: FC(experimentado, R1 y R2), 0.5
+	BH = {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5}
+	Meta = noSolo
+	NuevasMetas = {}
+	Verificar ( noSolo, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5} ) -> -1
+	Caso 1: experimentado y noSolo, -1
+	Caso 3: experimentado y noSolo, causante, FC =-0
+Aplicar regla R6
+	CC = {R5, R6}
+	Regla = {R6}
+	Eliminar R6 -> CC = {R5}
+	NuevasMetas = {cansado}
+	Meta = cansado
+	NuevasMetas = {}
+	Verificar ( cansado, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5} )
+	CC = {R5, R3, R4}
+	Aplicar regla R4
+		CC = {R5, R3, R4}
+		Regla = {R4}
+		Eliminar R4 -> CC = {R5, R3}
+		NuevasMetas = {conducirmas3horas}
+		Meta = conducirmas3horas
+		NuevasMetas = {}
+		Verificar ( conducirmas3horas, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5} ) -> 1
+		Caso 3: conducirmas3horas, cansado, FC =1
+	Aplicar regla R3
+		CC = {R5, R3}
+		Regla = {R3}
+		Eliminar R3 -> CC = {R5}
+		NuevasMetas = {conducir23horas}
+		Meta = conducir23horas
+		NuevasMetas = {}
+		Verificar ( conducir23horas, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5} ) -> -1
+		Caso 3: conducir23horas, cansado, FC =0
+	Caso 2: FC(cansado, R3 y R4), 1
+	BH = {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5, cansado:1}
+	Caso 3: cansado, causante, FC =0.5
+Aplicar regla R7
+	CC = {R5}
+	Regla = {R5}
+	Eliminar R5 -> CC = {}
+	NuevasMetas = {joven, alcohol}
+	Meta = joven
+	NuevasMetas = {alcohol}
+	Verificar ( joven, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5, cansado:1} )
+	BH = {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5, cansado:1, joven:0}
+	Meta = alcohol
+	NuevasMetas = {}
+	Verificar ( alcohol, {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5, cansado:1, joven:0} ) -> 0.5
+	Caso 1: joven y alcohol, 0
+	Caso 3: joven y alcohol, causante, FC =0
+BH = {antiguedad23:1, antiguedadmas3:-1, conducirmas3horas:1, conducir23horas:-1, noSolo:-1, alcohol:0.5, experimentado:0.5, cansado:1, joven:0, causante:0.5}
+
+Objetivo causante, 0.5

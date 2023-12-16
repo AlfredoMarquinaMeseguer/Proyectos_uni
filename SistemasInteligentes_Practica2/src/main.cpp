@@ -301,7 +301,8 @@ int main(int argc, char *argv[])
             SBRLogger::instancia()->addMeta(hechoAux);
             hechoAux->evaluar();
 
-            (*salida) << "Objetivo " << hechoAux->getNombre() << ", " << hechoAux->getFactorCerteza() << "\n";
+            (*salida) << std::endl
+                      << "Objetivo " << hechoAux->getNombre() << ", " << hechoAux->getFactorCerteza() << "\n";
         }
     }
     else
@@ -343,10 +344,12 @@ int main(int argc, char *argv[])
                 {
                     objetivoMax = hechoAux;
                 }
-                (*salida) << std::endl;
             }
         }
-        (*salida) << "Objetivo " << hechoAux->getNombre() << ", " << hechoAux->getFactorCerteza() << "\n";
+
+        (*salida) << std::endl
+                  << "Objetivo " << hechoAux->getNombre() << ", "
+                  << hechoAux->getFactorCerteza() << "\n";
     }
     // Read from the second input file and write to the output file
 
