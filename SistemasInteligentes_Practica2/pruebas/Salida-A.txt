@@ -1,0 +1,77 @@
+Nombre de la Base de Conocimientos: BC-A
+Nombre de la Base de Hechos: BH-A
+Objetivo: pasear
+
+BH = {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1}
+NuevasMetas = {pasear}
+Meta = pasear
+NuevasMetas = {}
+Verificar ( pasear, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1} )
+CC = {R5}
+Aplicar regla R5
+	CC = {R5}
+	Regla = {R5}
+	Eliminar R5 -> CC = {}
+	NuevasMetas = {noSerHerido, buenDia}
+	Meta = noSerHerido
+	NuevasMetas = {buenDia}
+	Verificar ( noSerHerido, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1} )
+	CC = {R2, R4}
+	Aplicar regla R4
+		CC = {R2, R4}
+		Regla = {R4}
+		Eliminar R4 -> CC = {R2}
+		NuevasMetas = {buenDia, ZeusFeliz}
+		Meta = ZeusFeliz
+		NuevasMetas = {buenDia}
+		Verificar ( ZeusFeliz, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1} )
+		CC = {R2, R3}
+		Aplicar regla R3
+			CC = {R2, R3}
+			Regla = {R3}
+			Eliminar R3 -> CC = {R2}
+			NuevasMetas = {buenDia, exitoAmoroso, HeraFeliz}
+			Meta = exitoAmoroso
+			NuevasMetas = {buenDia, HeraFeliz}
+			Verificar ( exitoAmoroso, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1} ) -> 1
+			Meta = HeraFeliz
+			NuevasMetas = {buenDia}
+			Verificar ( HeraFeliz, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1} ) -> 1
+			Caso 1: exitoAmoroso y HeraFeliz, 1
+			Caso 3: exitoAmoroso y HeraFeliz, ZeusFeliz, FC =0.9
+		BH = {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1, ZeusFeliz:0.9}
+		Caso 3: ZeusFeliz, noSerHerido, FC =0.9
+	Aplicar regla R2
+		CC = {R2}
+		Regla = {R2}
+		Eliminar R2 -> CC = {}
+		NuevasMetas = {buenDia, bandidos}
+		Meta = bandidos
+		NuevasMetas = {buenDia}
+		Verificar ( bandidos, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1, ZeusFeliz:0.9} )
+		CC = {R1}
+		Aplicar regla R1
+			CC = {R1}
+			Regla = {R1}
+			Eliminar R1 -> CC = {}
+			NuevasMetas = {buenDia, economiaMal, caminosNoProtegidos}
+			Meta = economiaMal
+			NuevasMetas = {buenDia, caminosNoProtegidos}
+			Verificar ( economiaMal, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1, ZeusFeliz:0.9} ) -> 0.8
+			Meta = caminosNoProtegidos
+			NuevasMetas = {buenDia}
+			Verificar ( caminosNoProtegidos, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1, ZeusFeliz:0.9} ) -> 0.6
+			Caso 1: economiaMal y caminosNoProtegidos, 0.6
+			Caso 3: economiaMal y caminosNoProtegidos, bandidos, FC =0.18
+		BH = {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1, ZeusFeliz:0.9, bandidos:0.18}
+		Caso 3: bandidos, noSerHerido, FC =0.09
+	Caso 2: FC(noSerHerido, R2 y R4), 0.909
+	BH = {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1, ZeusFeliz:0.9, bandidos:0.18, noSerHerido:0.909}
+	Meta = buenDia
+	NuevasMetas = {}
+	Verificar ( buenDia, {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1, ZeusFeliz:0.9, bandidos:0.18, noSerHerido:0.909} ) -> 1
+	Caso 1: noSerHerido y buenDia, 0.909
+	Caso 3: noSerHerido y buenDia, pasear, FC =0.8181
+BH = {economiaMal:0.8, caminosNoProtegidos:0.6, exitoAmoroso:1, HeraFeliz:1, buenDia:1, ZeusFeliz:0.9, bandidos:0.18, noSerHerido:0.909, pasear:0.8181}
+
+Objetivo pasear, 0.8181

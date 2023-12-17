@@ -1,0 +1,78 @@
+Nombre de la Base de Conocimientos: BC-2
+Nombre de la Base de Hechos: BH-2
+Objetivo: ganaEST, ganaRM
+
+BH = {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1}
+NuevasMetas = {ganaEST}
+Meta = ganaEST
+NuevasMetas = {}
+Verificar ( ganaEST, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1} )
+CC = {R1, R4, R6}
+Aplicar regla R1
+	CC = {R1, R4, R6}
+	Regla = {R6}
+	Eliminar R6 -> CC = {R1, R4}
+	NuevasMetas = {arbMod}
+	Meta = arbMod
+	NuevasMetas = {}
+	Verificar ( arbMod, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1} ) -> 1
+	Caso 3: arbMod, ganaEST, FC =0.4
+Aplicar regla R4
+	CC = {R1, R4}
+	Regla = {R4}
+	Eliminar R4 -> CC = {R1}
+	NuevasMetas = {publicoEqui}
+	Meta = publicoEqui
+	NuevasMetas = {}
+	Verificar ( publicoEqui, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1} ) -> 0.35
+	Caso 3: publicoEqui, ganaEST, FC =0
+Aplicar regla R6
+	CC = {R1}
+	Regla = {R1}
+	Eliminar R1 -> CC = {}
+	NuevasMetas = {les2pivEST}
+	Meta = les2pivEST
+	NuevasMetas = {}
+	Verificar ( les2pivEST, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1} ) -> 1
+	Caso 3: les2pivEST, ganaEST, FC =0
+BH = {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1, ganaEST:0.4}
+
+NuevasMetas = {ganaRM}
+Meta = ganaRM
+NuevasMetas = {}
+Verificar ( ganaRM, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1, ganaEST:0.4} )
+CC = {R2, R3, R5}
+Aplicar regla R2
+	CC = {R2, R3, R5}
+	Regla = {R5}
+	Eliminar R5 -> CC = {R2, R3}
+	NuevasMetas = {arbMod}
+	Meta = arbMod
+	NuevasMetas = {}
+	Verificar ( arbMod, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1, ganaEST:0.4} ) -> 1
+	Caso 3: arbMod, ganaRM, FC =0.75
+Aplicar regla R3
+	CC = {R2, R3}
+	Regla = {R3}
+	Eliminar R3 -> CC = {R2}
+	NuevasMetas = {publicoMayEST}
+	Meta = publicoMayEST
+	NuevasMetas = {}
+	Verificar ( publicoMayEST, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1, ganaEST:0.4} ) -> 0.65
+	Caso 3: publicoMayEST, ganaRM, FC =0
+Aplicar regla R5
+	CC = {R2}
+	Regla = {R2}
+	Eliminar R2 -> CC = {}
+	NuevasMetas = {les2pivRM, visitanteRM}
+	Meta = les2pivRM
+	NuevasMetas = {visitanteRM}
+	Verificar ( les2pivRM, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1, ganaEST:0.4} ) -> 1
+	Meta = visitanteRM
+	NuevasMetas = {}
+	Verificar ( visitanteRM, {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1, ganaEST:0.4} ) -> 1
+	Caso 1: les2pivRM y visitanteRM, 1
+	Caso 3: les2pivRM y visitanteRM, ganaRM, FC =0
+BH = {visitanteRM:1, arbMod:1, publicoMayEST:0.65, publicoEqui:0.35, les2pivEST:1, les2pivRM:1, ganaEST:0.4, ganaRM:0.75}
+
+Objetivo ganaRM, 0.75

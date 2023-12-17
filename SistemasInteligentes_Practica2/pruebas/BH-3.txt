@@ -1,0 +1,10 @@
+7
+antiguedad23, FC=1
+antiguedadmas3, FC=-1
+conducirmas3horas, FC=1
+conducir23horas, FC=-1
+noSolo, FC=-1
+alcohol, FC=0.5
+joven, FC=0
+Objetivo
+causante

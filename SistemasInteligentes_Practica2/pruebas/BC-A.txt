@@ -1,0 +1,6 @@
+5
+R1: Si economiaMal y caminosNoProtegidos Entonces bandidos, FC=0.3
+R2: Si bandidos Entonces noSerHerido, FC=0.5
+R3: Si exitoAmoroso o HeraFeliz Entonces ZeusFeliz, FC=0.9
+R4: Si ZeusFeliz Entonces noSerHerido, FC=1
+R5: Si noSerHerido y buenDia Entonces pasear, FC=0.9
