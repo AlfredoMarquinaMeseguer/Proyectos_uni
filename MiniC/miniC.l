@@ -7,7 +7,7 @@ int numErroresLex = 0;
 digito              [0-9]
 letra               [a-zA-Z]
 entero              {digito}+
-panico              [^A-Za-z0-9();,=+-{}_$]
+panico              [^A-Za-z0-9();,=+\-{}_$\"]
 
 %option yylineno
 %x COMENTARIO  
@@ -33,7 +33,8 @@ do                                           return HACER;
 while                                           return MIENTRAS;
 read                                            return LEER;
 print                                           return ESCRIBIR;
-(_|\$|{letra})({letra}|{digito}|_|\$){0,15}     {yylval.lexema = strdup(yytext);return ID;}
+(_|\$|{letra})({letra}|{digito}|_|\$){0,15}     {yylval.lexema = strdup(yytext); return ID;}
+	/*{if (yyleng < 16){yylval.lexema = strdup(yytext); return ID;}else{yymore(); BEGIN ERROR;}}*/
 {entero}                                          {yylval.lexema = strdup(yytext);return NUM;}
 \"([^\"\n]|\\.)*\"                              {yylval.lexema = strdup(yytext);return STRING;}
 \"([^\"\n]|\\.)*

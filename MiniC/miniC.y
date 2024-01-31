@@ -195,6 +195,13 @@ statement 	: ID ASIG_OP expression SEMICOLON  /*{ imprimirCodigo($3); }*/
 			//Insertar codigo
 			insertaLC($$,finalLC($$),aux); }
 		| MIENTRAS A_PAREN expression C_PAREN statement {
+			// etiqueta1:
+			// beqz expression  -> salto etiqueta2
+			// 
+			//	statement
+			//
+			//	salto etiqueta1
+			// etiqueta2:
 			char * etiq1=nuevaEtiqueta();
 			char * etiq2=nuevaEtiqueta();
 
