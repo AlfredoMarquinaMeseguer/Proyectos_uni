@@ -1,9 +1,0 @@
-X1) Comentario multilinea
-X2) Modo pánico
-3) (0.25, OPCIONAL)COmprobar que el número se encuentra: -2^31 <= n <= 2^31-1 ----> Utilizar atoll en C para convertir cadenas a número
-4) Controlar tamaño ID ---> yylength()
-5) (OPCIONAL) Controlar cadenas y comentarios sin cerrar ---> 
-	Cadenas: en la misma linea.
-	Cometarios: Llegara <<EOF>> sin cerrar. Con codiciones de arranque + fácil.
-
-Si vamos a utilizar funciones ---> declarar

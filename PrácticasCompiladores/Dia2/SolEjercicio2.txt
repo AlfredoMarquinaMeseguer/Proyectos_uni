@@ -1,0 +1,11 @@
+Ejercicio 2:
+
+escape \\(\"|\\)
+escape \\.
+
+\"(literal|escape)*\"
+\"[^"\n]*\"
+\"([^"\n]|{escape})*\"
+
+Ejercicio 4:
+[sS][eE][lL][eE][cC][tT]

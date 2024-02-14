@@ -1,5 +1,6 @@
  begin end -- prueba
 read write identificador 2345 () ;,
+/******** Prueba comentario */
 main
 print
 _prueba

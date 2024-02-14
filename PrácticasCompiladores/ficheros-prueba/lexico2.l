@@ -4,7 +4,7 @@
 digito              [0-9]
 letra               [a-zA-Z]
 entero              {digito}+
-
+%x COMENTARIO
 %option yylineno
 
 %%
@@ -26,5 +26,10 @@ print                                       return WRITE;
 "+"                                         return PLUSOP;
 "-"                                         return MINUSOP;
 {entero}[.]{entero}                         return REALLIT;
+	/* "/∗"([ˆ∗]|[∗]+[ˆ∗/])∗[∗]+"/" comentario multilinea */
+"/*"                                            {BEGIN COMENTARIO; yymore();}
+<COMENTARIO>[*]+[/]                             {BEGIN 0; printf("Comentario: %s\n", yytext);}
+<COMENTARIO>[^*]*								yymore();
+<COMENTARIO>[*]+[^/*]*							yymore();
 .                                           printf("Error en caracter %s en la linea %d\n",yytext, yylineno);
 %%

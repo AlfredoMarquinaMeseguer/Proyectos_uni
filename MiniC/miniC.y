@@ -27,10 +27,10 @@ ListaC codigo;
 
 %type <codigo> expression statement statement_list print_item print_list read_list declarations identifier_list asig
 
-%token EMPIEZA LEER ESCRIBIR A_PAREN C_PAREN SEMICOLON COMA ASIG_OP MAS_OP MENOS_OP A_LLAVE C_LLAVE VAR CONST SI SINO MIENTRAS POR_OP DIV_OP REAL HACER
+%token EMPIEZA LEER ESCRIBIR A_PAREN C_PAREN SEMICOLON COMA ASIG_OP MAS_OP MENOS_OP A_LLAVE C_LLAVE VAR CONST SI SINO MIENTRAS MULT_OP DIV_OP REAL HACER
 %token<lexema> STRING ID NUM
 %left MAS_OP MENOS_OP
-%left POR_OP DIV_OP
+%left MULT_OP DIV_OP
 %precedence UMENOS
 
 %define parse.error verbose
@@ -436,7 +436,7 @@ expression 	: expression MAS_OP expression {
 							insertaLC($$,finalLC($$),oper);
 							liberaLC($3);
 							liberarReg(oper.arg2); }
-		| expression POR_OP expression {
+		| expression MULT_OP expression {
 							$$ = $1;
 							concatenaLC($$,$3);
 							Operacion oper;
