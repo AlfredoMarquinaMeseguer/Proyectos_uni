@@ -69,8 +69,8 @@ begin
 	i = inicio+2;
 	while i<=final then
 		temp = arrayLectura[i] // guardamos en local por buenas prácticas
-		opearcion = arrayLectura[i-1]
-		total = calcular(total, temp, operacion)
+		operación = arrayLectura[i-1]
+		total = calcular(total, temp, operación)
 		i+=2
 	finwhile
 
@@ -131,7 +131,7 @@ begin
 	writeln("Sumador terminado. Total:", total);
 	signal(semaforoEscritura);
 
-	// OPTIONAL: Se pueden liberar los semáforo
+	// OPTIONAL: Se pueden "liberar" los semáforos
 	for i:=0.. len(semaforoSumador) do:
 		signal(semaforoSumador[i]);
 end;
