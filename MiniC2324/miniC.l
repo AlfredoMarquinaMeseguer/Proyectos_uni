@@ -20,8 +20,10 @@ panico              [^A-Za-z0-9();,=+/*\-{}_"]
 "//"(.*)[\n]                                    ;
 "/*"                                            BEGIN COMENTARIO;
 <COMENTARIO>[*]+[/]                             BEGIN 0;
+<COMENTARIO><<EOF>> 							BEGIN 0;
 <COMENTARIO>[^*]*								;
 <COMENTARIO>[*]+[^/*]*							;
+        	/* "/∗"([ˆ∗]|[∗]+[ˆ∗/])∗[∗]+"/" comentario multilinea */
 void                                            return EMPIEZA;
 var                                             return VAR;
 const                                           return CONST;
