@@ -1,0 +1,9 @@
+Notas PCD clase:
+no poner lock y unlock en el pseudo.
+La única variable compartida que tienen que tener los procesos es el monitor. El resto tienen que estar contenidas en el monitor.
+No imprimir en el monitor si el monitor tiene que hacer algo más que solo imprimir.
+Ejercicio 3
+Los valores X e Y aleatorios.
+Cuando toca dormir el tiempor del servicio -> restar el timepo utilizado a la cola -> despertar al siguiente en la fila.
+
+

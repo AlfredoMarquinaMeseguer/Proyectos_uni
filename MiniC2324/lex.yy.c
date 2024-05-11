@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -531,15 +531,14 @@ static int yy_more_len = 0;
 char *yytext;
 #line 1 "miniC.l"
 #line 2 "miniC.l"
-	// TODO: Cambiar más adelante por generado automagicamente
-#include "miniC.h"
 #include <limits.h>
-//#include "listaCodigo.h"
+#include "listaCodigo.h"
+#include "miniC.tab.h"
 
 int numErroresLex = 0;
-#line 541 "lex.yy.c"
+#line 539 "lex.yy.c"
   
-#line 543 "lex.yy.c"
+#line 541 "lex.yy.c"
 
 #define INITIAL 0
 #define COMENTARIO 1
@@ -758,11 +757,11 @@ YY_DECL
 		}
 
 	{
-#line 17 "miniC.l"
+#line 16 "miniC.l"
 
-#line 19 "miniC.l"
-	/*reglas en regex		acción realizada, normalmente codigo que devuelven*/
-#line 766 "lex.yy.c"
+#line 18 "miniC.l"
+	/*reglas en regex                       acción realizada, normalmente codigo que devuelven*/
+#line 764 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -838,22 +837,26 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 20 "miniC.l"
+#line 19 "miniC.l"
 ;
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 21 "miniC.l"
+#line 20 "miniC.l"
 ;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 22 "miniC.l"
+#line 21 "miniC.l"
 BEGIN COMENTARIO;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
+#line 22 "miniC.l"
+BEGIN 0;
+	YY_BREAK
+case YY_STATE_EOF(COMENTARIO):
 #line 23 "miniC.l"
 BEGIN 0;
 	YY_BREAK
@@ -869,149 +872,147 @@ YY_RULE_SETUP
 #line 25 "miniC.l"
 ;
 	YY_BREAK
+/* "/∗"([ˆ∗]|[∗]+[ˆ∗/])∗[∗]+"/" comentario multilinea */
 case 7:
 YY_RULE_SETUP
-#line 26 "miniC.l"
+#line 27 "miniC.l"
 return EMPIEZA;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 27 "miniC.l"
+#line 28 "miniC.l"
 return VAR;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 28 "miniC.l"
+#line 29 "miniC.l"
 return CONST;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 29 "miniC.l"
+#line 30 "miniC.l"
 return SI;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 30 "miniC.l"
+#line 31 "miniC.l"
 return SINO;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 31 "miniC.l"
+#line 32 "miniC.l"
 return HACER;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 32 "miniC.l"
+#line 33 "miniC.l"
 return MIENTRAS;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 33 "miniC.l"
+#line 34 "miniC.l"
 return LEER;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 34 "miniC.l"
+#line 35 "miniC.l"
 return ESCRIBIR;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 35 "miniC.l"
-{if (yyleng < 32){/*yylval.lexema = strdup(yytext);*/ }else{yymore(); BEGIN ERROR;}return ID;}
+#line 36 "miniC.l"
+{if (yyleng < 32){yylval.lexema = strdup(yytext);}else{yymore(); BEGIN ERROR;}return ID;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 36 "miniC.l"
-{if (atoll(yytext) < INT_MAX){/*yylval.lexema = strdup(yytext);*/}else{yymore(); BEGIN ERROR;}return NUM;}
+#line 37 "miniC.l"
+{if (atoll(yytext) < INT_MAX){yylval.lexema = strdup(yytext);}else{yymore(); BEGIN ERROR;}return NUM;}
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 37 "miniC.l"
-return CADENA;//{yylval.lexema = strdup(yytext);return CADENA;}
+#line 38 "miniC.l"
+{yylval.lexema = strdup(yytext);return STRING;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 38 "miniC.l"
+#line 39 "miniC.l"
 return A_PAREN;		
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 39 "miniC.l"
+#line 40 "miniC.l"
 return C_PAREN;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 40 "miniC.l"
+#line 41 "miniC.l"
 return SEMICOLON;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 41 "miniC.l"
+#line 42 "miniC.l"
 return COMA;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 42 "miniC.l"
+#line 43 "miniC.l"
 return ASIG_OP; 
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 43 "miniC.l"
+#line 44 "miniC.l"
 return MAS_OP;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 44 "miniC.l"
+#line 45 "miniC.l"
 return MENOS_OP;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 45 "miniC.l"
+#line 46 "miniC.l"
 return MULT_OP;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 46 "miniC.l"
+#line 47 "miniC.l"
 return DIV_OP;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 47 "miniC.l"
+#line 48 "miniC.l"
 return A_LLAVE;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 48 "miniC.l"
+#line 49 "miniC.l"
 return C_LLAVE;
 	YY_BREAK
-/* Se puede eliminar los banderines de ERROR */
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 50 "miniC.l"
+#line 51 "miniC.l"
 {printf("Reconocido error en linea %d: %s.\n",yylineno, yytext); numErroresLex++;}
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 51 "miniC.l"
-{yymore();printf("Error Reconocido %s\n",yytext);}
+#line 52 "miniC.l"
+{yymore();}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 52 "miniC.l"
+#line 53 "miniC.l"
 {yyless(yyleng-1);printf("Reconocido error en linea %d: %s.\n",yylineno, yytext); numErroresLex++; BEGIN 0;}
 	YY_BREAK
-/* .                                               {yymore(); BEGIN ERROR;}*/
 case 33:
 YY_RULE_SETUP
-#line 55 "miniC.l"
+#line 54 "miniC.l"
 ECHO;
 	YY_BREAK
-#line 1013 "lex.yy.c"
+#line 1014 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
-case YY_STATE_EOF(COMENTARIO):
 case YY_STATE_EOF(ERROR):
 	yyterminate();
 
@@ -2028,6 +2029,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 55 "miniC.l"
+#line 54 "miniC.l"
 
 

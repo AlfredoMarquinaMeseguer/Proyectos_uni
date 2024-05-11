@@ -1,0 +1,233 @@
+process Controlador(procesosRestantes: int, /** todos los buzones de recibir **/ )
+var
+	/****** Buzones de recibir ******/
+	solicitudCaja: mailbox of mailbox of int;
+	// Recibe las solicitudes de los procesos persona que 
+	// quieren ser asignados a una caja.
+
+	buzonTerminar: mailbox of mailbox of string;
+	// Recibe mensajes de los procesos que terminan. Va asociado a la variable 
+	// procesosRestantes, cada vez que recibe uno, esta se decrementa. Cuando
+	// Llegue a cero el proceso controlador debe terminar.
+
+	// Los siguientes buzones son para el control de la exclusión mutua
+	// Sin embargo la exclusión mutua de la pantall se controla con un buzón
+	// de testigo descentralizado.
+
+	abrirCajaA: mailbox of mailbox of string;
+	// Recibe peticiones de procesos persona que quieren obtener la 
+	// exclusión mútua de la caja A
+
+	liberarCajaA: mailbox of mailbox of string;
+	// Recibe mensajes del proceso que tiene la exclusión mútua de la
+	// caja A para liberarla.
+
+	abrirCajaB: mailbox of mailbox of string;
+	// Recibe peticiones de procesos persona que quieren obtener la 
+	// exclusión mútua de la caja B.
+
+	liberarCajaB: mailbox of mailbox of string;
+	// Recibe mensajes del proceso que tiene la exclusión mútua de la
+	// caja B para liberarla.
+	
+	/****** Entero ******/
+	procesosRestantes: int;
+	// Lleva la cuenta de los procesos que quedan ejecutando.
+	// Cuando llega a cero se termina el proceso Controlador.
+
+	/****** Booleanos ******/
+	cajaALibre: bool;
+	// Variable para el seguimiento de la exclusión mútua de la Caja A.
+
+	cajaBLibre: bool;
+	// Variable para el seguimiento de la exclusión mútua de la Caja B.
+
+	escrituraLibre: bool;
+	// Variable para el seguimiento de la exclusión mútua de la pantalla.
+begin
+
+	cajaALibre = true;
+	cajaBLibre = true;
+	escrituraLibre = true;
+
+	repeat
+		Select
+				receive(solicitudCaja, buzonRespuesta);
+				// Genera un número entre 1 y 10 que representa el tiempo (en Segundos) a estar en caja
+				tiempoEspera = generarTiempoEspera();
+				// Si el tiempo es mayor o igual al mínimo requerido para la caja A 
+				// se le asigna esta de lo contrario será la B.
+				if (tiempoEspera >= TIEMPO_MIN_CAJA_A) 
+					// Se envía una respuesta que contiene el tiempo de espera y la caja asignada
+					send(buzonRespuesta, crearMensaje(tiempoEspera, cajaA));
+				else 
+					send(buzonRespuesta, crearMensaje(tiempoEspera, cajaB));
+			or
+			when(cajaALibre) =>
+				receive(abrirCajaA, buzonRespuesta);
+				cajaALibre = false;
+				send(buzonRespuesta, "ok");
+			or
+			when(!cajaALibre) =>
+				receive(liberarCajaA, buzonRespuesta);
+				cajaALibre = true;
+				// No es necesario notificar la liberación
+			or
+			when(cajaBLibre) =>
+				receive(abrirCajaB, buzonRespuesta);
+				cajaBLibre = false;
+				send(buzonRespuesta, "ok");
+			or
+			when(!cajaBLibre) =>
+				receive(liberarCajaB, buzonRespuesta);
+				cajaBLibre = true;
+				// No es necesario notificar la liberación
+			or
+				receive(buzonTerminar, msj);
+				procesosRestantes--;
+		end;
+	until procesosRestantes == 0 ;
+end;
+
+process persona (id, /*Buzones del controlador*/, /*Buzones de la persona*/)
+var
+	/****** Buzones del controlador ******/
+	solicitudCaja: mailbox of mailbox of int;
+	abrirCajaA: mailbox of mailbox of string;
+	liberarCajaA: mailbox of mailbox of string;
+	abrirCajaB: mailbox of mailbox of string;
+	liberarCajaB: mailbox of mailbox of string;
+	buzonTerminar: mailbox of mailbox of string;
+
+	/****** Buzones de la persona ******/
+	respuestaSolicitudCaja: mailbox of string;
+	respuestaAbrirCajaA: mailbox of string;
+	respuestaAbrirCajaB: mailbox of string;
+	respuestaSolicitudEscritura: mailbox of string;
+	respuestaLiberaEscritura: mailbox of string;
+
+	/****** Buzón control del a exclusión mutua pantalla con testigo ******/
+	mutexEscritura: mailbox of mailbox of string;
+	// Este buzón sirve para el control de la exclusión mutua mediante paso de testigo.
+
+	id: int; 
+	// El id del proceso
+
+	caja: string; // También puede ser un enum
+	// Guardamos la caja utilizada para imprimir en el mensaje más tarde 
+
+	tiempoPago: int;
+	// El tiempo que pasa la persona en caja.
+	
+begin
+	for i := 0..N_REPETICIONES do 
+	begin
+		///// 1 Realiza la compra
+		sleep(rand());
+		
+		///// 2 Solicita una Caja
+		send(solicitudCaja, respuestaSolicitudCaja);
+		receive(respuestaSolicitudCaja, msj);
+		// Como solicitud caja tiene que devolver dos argumentos y el buzon solo puede enviar uno,
+		// Se ha elegido codificarlos en un mensaje. Se podrían poner juntos en un struct, pero eso
+		// sería más dificil de traducir en Java.
+		tiempoPago, caja = decodificarMensaje(msj); 
+
+		///// 3 y 4 realiza el pago en una caja y las libera
+		// Solicitas exclusión mutua de la caja correspondiente
+		if (caja = "A")
+		begin
+			send(abrirCajaA, respuestaAbrirCajaA);
+			receive(respuestaAbrirCajaA, msj);
+			sleep(tiempoPago); // Simular realizar pago en caja
+			send(liberarCajaA, respuestaLiberarCajaA);
+		end else 
+		begin
+			send(abrirCajaB, respuestaAbrirCajaB);
+			receive(respuestaAbrirCajaB, msj);
+			sleep(tiempoPago); // Simular realizar pago en caja
+			send(liberarCajaB, respuestaLiberarCajaB);
+		end;
+		
+		///// 5 Imprime en pantalla información
+		
+		receive(mutexEscritura, testigo); // Solicita la exlucisón mutua
+
+		// Imprime por pantalla la información del pago
+		// informaciónDelPago forma el mensaje según enunciado
+		print(informaciónDelPago(id, caja, tiempoPago); 
+
+		send(mutexEscritura, testigo); // Liberar exclusión mutua
+	end;
+
+	send(buzonTerminar, "ok");
+end;
+
+main()
+var
+	/****** Buzones del controlador ******/
+	solicitudCaja: mailbox of mailbox of int;
+	abrirCajaA: mailbox of mailbox of string;
+	liberarCajaA: mailbox of mailbox of string;
+	abrirCajaB: mailbox of mailbox of string;
+	liberarCajaB: mailbox of mailbox of string;
+	buzonTerminar: mailbox of mailbox of string;
+
+	/****** Buzones de la persona ******/
+	respuestaSolicitudCaja: array[0..29] of mailbox of string;
+	respuestaAbrirCajaA: array[0..29] of mailbox of string;
+	respuestaAbrirCajaB: array[0..29] of mailbox of string;
+
+	/****** Buzón control del a exclusión mutua pantalla con testigo ******/
+	mutexEscritura: mailbox of mailbox of string;
+
+	controlador: process Controlador;
+	clientes: array[0.. N_CLIENTES-1] of process Persona;
+begin
+	/*Realiza la inicialización de los buzones aquí*/
+	// Se obvia porque es muy simple
+
+	writeln("Definiendo procesos");
+
+	controlador = Controlador(solicitudCaja,
+				abrirCajaA,
+				liberarCajaA,
+				abrirCajaB,
+				liberarCajaB,
+				buzonTerminar,
+				N_CLIENTES);
+
+	for i:= 0..N_CLIENTES-1 do
+	begin 
+	clientes[i] = Cliente(i, 
+			solicitudCaja,
+			abrirCajaA,
+			liberarCajaA,
+			abrirCajaB,
+			liberarCajaB,
+			solicitudEscritura,
+			liberaEscritura,
+			buzonTerminar,
+			respuestaSolicitudCaja[i],
+			respuestaAbrirCajaA[i], 
+			respuestaAbrirCajaB[i],
+			mutexEscritura);
+	end;
+
+	writeln("Comenzando ejecución");
+	
+	// Se envia el primer testigo desde el main.
+	send(mutexEscritura, testigo);
+	
+	// Lanzamos los procesos
+	cobegin
+		controlador;
+		for c in clientes do
+			c;
+		end;
+	coend;
+
+	writeln("Ejecución terminada");
+end;
+
+

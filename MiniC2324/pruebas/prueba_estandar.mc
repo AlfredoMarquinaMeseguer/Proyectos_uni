@@ -1,4 +1,4 @@
-void prueba() {
+prueba() {
 const a=0, b=0;
 var c=5+2-2;
 print "Inicio del programa\n";

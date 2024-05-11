@@ -1,0 +1,164 @@
+// La variable turno informa a qué grupo de le toca pasar. 
+// Siendo 0 calle norte-sur, 1 calle este-oeste y 3 peatones. 
+// Cuando turno se pone a -1 significa que la simulación ha terminado.
+// NOTA: Turno puede ser un enum.
+turno:int;
+mutex:semaphore;
+semaforosTurnos: array[0..2] semaphore;
+esperando, pasando:array[0..2] of int;
+
+
+// Este proceso se encarga de actualizar la variable turno.
+// Simula los semáforos de la carretera cambiando
+process type semaforoCarretera()
+begin
+	// Estas líneas se hacen en el constructor en Java para que sea menos lioso
+	wait(mutex);
+	turno:= 0;
+	signal(mutex);
+	// Aquí se pone un número arbitrario de turnos que queremos que dure el programa
+	for i:=0 to 100 do 
+	begin
+		wait(mutex);
+		turno := (turno+1) mod 3;
+		signal(mutex);
+	// La función de dormir de Java pero parámetro en segundos
+		sleep(5); 
+	end;
+	wait(mutex);
+	turno := -1;
+	for i:= 0 .. 2 do // Despertamos a todos los procesos esperando para que salgan
+		signal(semaforosTurnos[i])
+	signal(mutex);
+end;
+
+process type coche(int calleInicial)
+var
+	turnoPasar:int;
+begin
+	turnoPasar:= calleInicial
+	wait(mutex);
+	while(turno != -1)
+	begin
+		/* Las condiciones son que no puede pasar si:
+		1. no es su turno
+		2. hay gente pasando del anterior
+		3. hay demasiados pasando en este turno
+		*/
+		if turno != turnoPasar || pasando[(turnoPasar-1) mod 3] !=  0 || pasando[turnoPasar] >= MAX_PASAR_COCHES then
+		begin			
+			esperando[turnoPasar]++;
+			signal(mutex);
+			wait(semaforosTurnos[turnoPasar]);
+			esperando[turnoPasar]--;
+		end;
+		if turno == -1: // Si el turno es el final salir
+			break;
+
+		pasando[turnoPasar]++;
+
+		// Liberamos si el cuace no está lleno
+		if esperando[turnoPasar] != 0 and pasando[turnoPasar] < MAX_PASAR_COCHES then
+			signal(semaforosTurnos[turnoPasar]); // Cesión exclusión mutua al siguiente
+		else // Si está lleno liberamos el mutex
+			signal(mutex);
+		
+		// pasar 
+		sleep(0.5);
+		
+		wait(mutex);
+		pasando[turnoPasar]--;
+		
+		// Liberamos del mismo proceso si (todas ciertas):
+		// 1. es nuetro turno
+ 		// 2. hay otros procesos esperando
+		if turno == turnoPasar && esperando[turnoPasar] != 0 then
+			signal(semaforosTurnos[turnoPasar]);
+		// Liberamos del siguiente si (todas ciertas);
+		// 1. no hay ninguno de nuestro turno pasando
+		// 2. no es nuestro turno
+		// 3. hay procesos del siguiente turno esperando
+		else if pasando[turnoPasar] == 0 and turnoPasar != turno and esperando[turnoPasar+1] > 0 then
+			signal(semaforoTurnos[turnoPasar + 1]);
+		else // Si ninguna de las anteriores entonces liberamos mutex
+			signal(mutex);
+		
+		sleep(7);
+		turnoPasar := (turnoPasar+1) mod 2;
+		wait(mutex);
+	end;
+	signal(mutex);
+end;
+	
+	
+TURNO_PEATONES = 2: int;
+SIGUIENTE_TURNO = 0: int;
+ANTERIOR_TURNO = 1: int;
+process type peaton()
+begin
+	wait(mutex);
+	while(turno != -1)
+	begin
+		if turno != TURNO_PEATONES || pasando[ANTERIOR_TURNO] != 0 then
+		begin			
+			esperando[TURNO_PEATONES]++;
+			signal(mutex);
+			wait(semaforosTurnos[TURNO_PEATONES]);
+			esperando[TURNO_PEATONES]--;
+		end;
+		pasando[TURNO_PEATONES]++;
+		if esperando[TURNO_PEATONES] > 0  and pasando[turnoPasar] < MAX_PASAR_PEATONES then
+			signal(semaforosTurnos[TURNO_PEATONES]);
+		else
+			signal(mutex);
+		
+		// pasar 
+		sleep(3);
+		
+		wait(mutex);
+		pasando[TURNO_PEATONES]--;
+
+		if turno == TURNO_PEATONES then
+			signal(semaforosTurnos[TURNO_PEATONES]);
+		else if pasando[TURNO_PEATONES] = 0 and turno != TURNO_PEATONES and esperando[turno] > 0 then
+			signal(semaforoTurnos[turno]);
+		else
+			signal(mutex);
+		
+		sleep(8);
+		wait(mutex);
+	end;
+	signal(mutex);
+end;
+
+main()
+begin
+	procesosCoches: array[0..100] de process; // De Process consumidor
+	procesosPeatones: array[0..50] de process; // De Process consumidor
+	solución: entero;
+end
+begin
+
+
+	writeln("Comienzo de ejecución");
+
+	// Inicialización de semáforos
+	initial(semaforoEscritura, 1)
+	initial(semaforoConsumidor, 0)
+	for i =0..len(semaforoSumador) do
+		initial(semaforoSumador[i],0)
+
+	// Definimos consumidores,
+	for i = 0 .. len(arrayEscritura)-1 do
+		procesos[i] = consumidor(i, i*11, (i+1)*11-1)
+	
+	// lanzar procesos
+	cobegin 
+	generador().launch(); // No inicializo porque no argumentos
+	for i = 0 .. len(arrayEscritura)-1 do
+		procesos[i].launch();
+	sumador().launch(); // No inicializo porque no argumentos
+	coend;
+
+	writeln ("Procesos terminados");
+end;

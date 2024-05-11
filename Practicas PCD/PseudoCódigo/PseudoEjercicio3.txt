@@ -1,0 +1,179 @@
+Monitor banco:
+export irAMáquina, liberarMáquina, esperaMesa, liberarMesa; 
+var
+	//// Para las máquinas
+	colaMaquina: Condition; // Cola común para todas las máquina
+	maquinasLibres: array[0..2] de boolean; // Máquinas, si están a true están libres
+	maquinas: int; // Número de máquinas disponibles
+	//// Para las mesas
+	colasMesas: array[0..3] de Condition; // Colas individuales de las mesas
+	// El número de personas esperando en la cola de mesa, si llega a cero es porque la mesa está libre
+	esperandoMesa: array[0..3] de int; 
+	mesasLibres: array[0..3] de boolean; // Indican que mesas están libres y cuales no, empiezan todas a true
+begin
+
+	// El cliente intenta coger una máquina. Si no hay libre, espera.
+	procedure irAMáquina():
+	var máquina: int;
+	begin
+		// El cliente comprueba si hay alguien en la cola
+		// o todas las máquina están ocupadas. En caso de estarlo,
+		// se espera
+		if maquinas == 0 then 
+			delay(colaMáquina);
+		id = 0;
+		while not(maquinasLibres[id]) do
+			i += 1;
+		maquinasLibres[id] = false;
+		maquinas --;
+
+		return id; // Devolvemos la máquina libre al cliente.
+	end;
+
+
+	// El cliente libera una máquina cuando termina de usarala.
+	procedure liberarMáquina(int máquinaUsada):
+	begin
+		máquinasLibres[máquinaUsada] = true; // Libera la máquina
+		maquinas++;
+		resume(colaMáquina); // Se reanuda la cola de las máquina
+
+		return copy(esperandoEnMáquina); // Le pasamos el estado actual de las mesas para que no 
+	end;
+
+	// Se espera en la cola de la mesa
+	procedure esperarMesa(int cola)
+	begin
+		// Como en Java se puede liberar la cola en orden con el atributo fairness de ReentrantLock
+		// no necesitamos asegurarlo de ninguna otra manera.
+		if not mesasLibres[cola] then
+		begin
+			esperandoMesa[cola]++;
+			delay(colasMesas[cola]);
+			// El "uso de la Mesa" (el sleep) se realiza fuera para evitar bloquear el monitor
+		end else
+			mesasLibres[cola] = false;
+		end;
+	end;
+
+	// Se despierta al siguiente proceso de la colas de mesa
+	procedure liberarMesa(int cola):
+	begin
+		if esperandoMesa[cola] > 0 then
+		begin
+			esperandoMesa[cola]--;
+			resume(colasMesas[cola]);
+		end else
+			mesasLibres[cola] = true;
+		end;
+	end;
+end;
+
+// Se implementa un semáforo binario estándar para el uso de la pantalla
+Monitor Pantalla;
+export esperaPantalla, liberaPantalla;
+var
+	colaPantalla: Condition;
+	pantallaLibre: boolean;
+begin
+	procedure esperaPantalla()
+	begin
+		if pantallaLibre
+		begin
+			delay(colaPantalla);
+		end else
+		begin
+			pantallaLibre=false;
+		end;
+	end;
+	
+	procedure liberarPantalla()
+	begin
+		if not empty(colaPantalla) 
+		begin
+			resume(colaPantalla);
+		end else
+			pantallaLibre = true;
+		end;
+	end;
+end;
+
+process type Cliente(banco: Monitor Banco, pantall: Monitor Pantalla):
+begin
+	var x, y: int;
+	var máquinaAsignada : int;
+	var colaMesa : int;
+	var personasEnColaMesas: array[0..3] de int;
+end
+begin
+	// Generar Números Aleatorios X e Y
+	x = rand();
+	y = rand();
+
+	// Utiliza la máquina
+	máquinaAsignada = banco.irAMáquina();
+	sleep(x); // El tiempo que está utilizando Máquina
+	// Liberamos las máquina
+	personasEnColaMesas = banco.liberarMáquina(máquinaAsignada); // Este proceso también devuelve los tiempos de espera
+
+	colaMesa = menorColaDeMesa(personasEnColaMesas); // Selecciona la cola con menos personas
+
+	// Imprime el mensaje
+	pantalla.esperaPantalla(); // Espera que le den la exclusión mutua
+	writeln(formarMensaje(x,y,máquinaAsignada,personasColaMesa,colaMesa)); // Escribe
+	pantalla.liberarPantalla(); // Libera la pantalla
+
+	// Usar la mesa
+	banco.esperarEnCola(colaMesa); // Espera la exclusión mutua
+	sleep(y); // Simula ser atendido en la mesa
+	banco.liberarCola(colaMesa); // Liberar la mesa
+end;
+
+// Función auxiliar que devuelve el indice de la cola de mesas con menor número de personas esperando
+int function menorColaDeMesa(array de int:colasMesas):
+var
+	indiceDeMenor:int ; // El indice de la cola con menos personas esperando 
+begin
+	// Se supone que la menor mesa es la primera y se va comprobando con las demás
+	indiceDeMenor = 0
+	for i:= 1..colasMesas.length - 1 do:
+	begin
+		// Se comprueba si la cola de indice i es menor que la actual
+		if esperandoMesa[indiceDeMenor] > esperandoMesa[i]
+		begin
+			// De ser menor i se convierte en el nuevo menor
+			indiceDeMenor = i;
+		end;
+	end;
+
+	return indiceDeMenor; // Se devulve el indice de la cola que menos personas tiene
+end;
+
+main()
+begin
+var
+	banco: Monitor Banco;
+	pantall: Monitor Pantalla;
+	clientes: array[0..49] de Cliente;
+end
+begin
+	// Inicializar variables
+	banco = new Monitor Banco();
+	pantalla = new Monitor Pantalla();
+
+	for i := 0 .. 49 do
+	begin
+		cliente[i] = new Cliente(banco, pantalla);
+	end;
+
+	// Lanzar procesos
+	cobegin
+		banco;
+		pantalla;
+		for i := 0 .. 49 do
+		begin
+			cliente[i];
+		end;
+	coend;
+
+end;
